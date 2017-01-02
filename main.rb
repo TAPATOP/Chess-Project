@@ -28,16 +28,16 @@ module StraightMoves
   #
   # works on the presumtion this is a straight move
   #
-  def moveStraight (figure, player, tableOfRange, playingTable)
-  	moveEast(figure, player, tableOfRange, playingTable)
-  	moveWest(figure, player, tableOfRange, playingTable)
-  	moveSouth(figure, player, tableOfRange, playingTable)
-  	moveNorth(figure, player, tableOfRange, playingTable)
+  def moveStraight (figure, playingTable)
+  	moveEast(figure, figure.player, figure.tableOfRange, playingTable)
+  	moveWest(figure, figure.player, figure.tableOfRange, playingTable)
+  	moveSouth(figure, figure.player, figure.tableOfRange, playingTable)
+  	moveNorth(figure, figure.player, figure.tableOfRange, playingTable)
   end
 end
 
 class Figure
-  attr_accessor :x, :y
+  attr_accessor :x, :y, :tableOfRange
 
   @player # Owner; White/ Black player
   
@@ -49,6 +49,7 @@ class Figure
     @x = x
     @y = y
     @player = player
+    @tableOfRange = Table.new
   end
 end
 
@@ -122,8 +123,8 @@ end
 
 table = Table.new
 
-rook = Rook.new(8, 1, 2)
-bishop = Bishop.new(8, 1, 2)
+rook = Rook.new(2, 2, 2)
+bishop = Bishop.new(3, 3, 1)
 
 table.putFigure(rook)
 table.putFigure(bishop)
@@ -133,12 +134,10 @@ table.formatTable
 
 include StraightMoves
 
-tableOfRange = Table.new
-
-moveStraight(rook, 3, tableOfRange, table)
+moveStraight(rook, table)
 
 puts 
-tableOfRange.display
+rook.tableOfRange.display
 puts
 table.display
 
