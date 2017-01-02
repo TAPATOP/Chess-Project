@@ -24,12 +24,26 @@ module StraightMoves
       tableOfRange.squares[figure.x][index] = '++'
     end
   end
+
+  #
+  # works on the presumtion this is a straight move
+  #
+  def moveStraight (figure, player, tableOfRange, playingTable)
+  	moveEast(figure, player, tableOfRange, playingTable)
+  	moveWest(figure, player, tableOfRange, playingTable)
+  	moveSouth(figure, player, tableOfRange, playingTable)
+  	moveNorth(figure, player, tableOfRange, playingTable)
+  end
 end
 
 class Figure
   attr_accessor :x, :y
 
   @player # Owner; White/ Black player
+  
+  def player
+  	@player
+  end
 
   def initialize(x = 0, y = 0, player = 0)
     @x = x
@@ -42,68 +56,87 @@ class Rook < Figure
   include StraightMoves
 end
 
-# figures above
+class Bishop < Figure
 
+end
+
+#
+# figures above
+#
+
+LEGIT_FIGURES = { ro: Rook, bi: Bishop }
 
 def stringToFigure(element)
-  legitFigures = { ro: Rook.new }
-  #if(element == 'ro' || element == 'kn' || element == 'bi' || element == 'ro' || element == 'ro' || element == 'ro')
-  if legitFigures[element.to_sym] then puts 'ok'
+  if LEGIT_FIGURES[element.to_sym] || LEGIT_FIGURES[element.downcase.to_sym] then puts 'ok'
   end
 end
 
-stringToFigure('re')
+#
+# helping functions
+#
 
 class Table
 
-	attr_accessor :squares
+  attr_accessor :squares
+  
   def initialize
   	@squares = Array.new(9){ Array.new(9, '--')}
-    @legitFigures = { ro: Rook.new }
   end
 
   def display
     @squares.each do |line|
       line.each do |square|
-      	if square != '--' then print square.red
+
+      	if LEGIT_FIGURES[square.to_sym] then print square.red
+      	elsif LEGIT_FIGURES[square.downcase.to_sym] then print square.blue
       	else print square
       	end
+
       	print ' '
       end
       puts
     end
   end
 
-  def putFigure(figureName, x, y, player)
-    if (@squares[x][y] == '--' && @legitFigures[figureName.to_sym])
-      @squares[x][y] = figureName
+  def putFigure(figure)
+    if @squares[figure.x][figure.y] == '--'
+      if LEGIT_FIGURES.key(figure.class)
+        if figure.player == 2 then @squares[figure.x][figure.y] = LEGIT_FIGURES.key(figure.class).to_s
+        else @squares[figure.x][figure.y] = LEGIT_FIGURES.key(figure.class).to_s.upcase	
+        end
+      else puts "BEEP BOOP! No such figure, hun"
+      end
+    else puts "BEEP BOOP! Coords are taken"
     end
   end
 
   def peek
   	@squares.each { |line| puts line.object_id }
   end
+
+  def formatTable
+  	@squares[0].each_index { |index| squares[0][index] = '0' + index.to_s }
+  	@squares.each_index { |index| squares[index][0] = '0' + index.to_s}
+  end
 end
-
-hash1 = { ro: Rook }
-
-p hash1['ro'.to_sym]
-p hash1.key(Rook)
 
 table = Table.new
 
-rook = Rook.new(5, 5, 1)
+rook = Rook.new(8, 1, 2)
+bishop = Bishop.new(8, 1, 2)
 
-table.putFigure('ro', 5, 5, 1)
+table.putFigure(rook)
+table.putFigure(bishop)
+# table.putFigure()
 
-table.display
+table.formatTable
+
 include StraightMoves
 
 tableOfRange = Table.new
-moveSouth(rook, 3, tableOfRange, table)
-moveNorth(rook, 3, tableOfRange, table)
-moveEast(rook,  3, tableOfRange, table)
-moveWest(rook,  3, tableOfRange, table)
+
+moveStraight(rook, 3, tableOfRange, table)
+
 puts 
 tableOfRange.display
 puts
@@ -111,7 +144,7 @@ table.display
 
 / test TO DO
 
-legit figure
+legit figure name
 legit coord
 
 /
