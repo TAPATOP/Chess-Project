@@ -29,10 +29,10 @@ module StraightMoves
   # works on the presumtion this is a straight move
   #
   def moveStraight (figure, playingTable)
-  	moveEast(figure, figure.player, figure.tableOfRange, playingTable)
-  	moveWest(figure, figure.player, figure.tableOfRange, playingTable)
-  	moveSouth(figure, figure.player, figure.tableOfRange, playingTable)
-  	moveNorth(figure, figure.player, figure.tableOfRange, playingTable)
+    moveEast(figure, figure.player, figure.tableOfRange, playingTable)
+    moveWest(figure, figure.player, figure.tableOfRange, playingTable)
+    moveSouth(figure, figure.player, figure.tableOfRange, playingTable)
+    moveNorth(figure, figure.player, figure.tableOfRange, playingTable)
   end
 end
 
@@ -42,7 +42,7 @@ class Figure
   @player # Owner; White/ Black player
   
   def player
-  	@player
+    @player
   end
 
   def initialize(x = 0, y = 0, player = 0)
@@ -81,19 +81,19 @@ class Table
   attr_accessor :squares
   
   def initialize
-  	@squares = Array.new(9){ Array.new(9, '--')}
+    @squares = Array.new(9) { Array.new(9, '--') }
   end
 
   def display
     @squares.each do |line|
       line.each do |square|
 
-      	if LEGIT_FIGURES[square.to_sym] then print square.red
-      	elsif LEGIT_FIGURES[square.downcase.to_sym] then print square.blue
-      	else print square
-      	end
+        if LEGIT_FIGURES[square.to_sym] then print square.red
+        elsif LEGIT_FIGURES[square.downcase.to_sym] then print square.blue
+        else print square
+        end
 
-      	print ' '
+        print ' '
       end
       puts
     end
@@ -103,21 +103,21 @@ class Table
     if @squares[figure.x][figure.y] == '--'
       if LEGIT_FIGURES.key(figure.class)
         if figure.player == 2 then @squares[figure.x][figure.y] = LEGIT_FIGURES.key(figure.class).to_s
-        else @squares[figure.x][figure.y] = LEGIT_FIGURES.key(figure.class).to_s.upcase	
+        else @squares[figure.x][figure.y] = LEGIT_FIGURES.key(figure.class).to_s.upcase  
         end
-      else puts "BEEP BOOP! No such figure, hun"
+      else puts 'BEEP BOOP! No such figure, hun'
       end
-    else puts "BEEP BOOP! Coords are taken"
+    else puts 'BEEP BOOP! Coords are taken'
     end
   end
 
   def peek
-  	@squares.each { |line| puts line.object_id }
+    @squares.each { |line| puts line.object_id }
   end
 
-  def formatTable
-  	@squares[0].each_index { |index| squares[0][index] = '0' + index.to_s }
-  	@squares.each_index { |index| squares[index][0] = '0' + index.to_s}
+  def format_table
+    @squares[0].each_index { |index| squares[0][index] = '0' + index.to_s }
+    @squares.each_index { |index| squares[index][0] = '0' + index.to_s }
   end
 end
 
@@ -130,13 +130,13 @@ table.putFigure(rook)
 table.putFigure(bishop)
 # table.putFigure()
 
-table.formatTable
+table.format_table
 
 include StraightMoves
 
 moveStraight(rook, table)
 
-puts 
+puts
 rook.tableOfRange.display
 puts
 table.display
@@ -145,5 +145,4 @@ table.display
 
 legit figure name
 legit coord
-
 /
