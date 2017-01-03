@@ -40,6 +40,10 @@ class Table
     else puts 'BEEP BOOP! Coords are taken'
     end
   end
+  
+  def put_figures(figures)
+  	figures.each { |figure| put_figure(figure) if figure != nil }
+  end
 
   def peek
     @squares.each { |line| puts line.object_id }

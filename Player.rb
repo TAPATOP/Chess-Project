@@ -11,6 +11,10 @@ class Player
   	@figures.push(figure)
   end
 
+  def add_figures(figures)
+  	figures.each { |figure| add_figure(figure) }
+  end
+
   def generate_table_of_range(table)
     @figures.each do |figure|
       figure.set_moves(table) if figure != nil

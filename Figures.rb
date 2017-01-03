@@ -39,8 +39,30 @@ class Queen < Figure
   	diagonal_moves(self, table)
   end
 end
-#
-# figures above
-#
 
-LEGIT_FIGURES = { Rook => 'ro', Bishop => 'bi', Queen => 'qu' }
+class Knight < Figure
+
+  def set_moves(table)
+    [-1, 1].each do |modifier1|
+      [-1, 1].each do |modifier2|
+      [0, 1].each do |modifier3|
+
+      	  if @x + modifier1 * (1 + modifier3) > 0 && @x + modifier1 * (1 + modifier3) < 9  && 
+      	  	 @y + modifier2 * (2 - modifier3) > 0 && @y + modifier2 * (2 - modifier3) < 9
+
+      	    if LEGIT_FIGURES[table[@x + modifier1 * (1 + modifier3)][@y + modifier2 * (2 - modifier3)].class]
+      	      if table[@x + modifier1 * (1 + modifier3)][@y + modifier2 * (2 - modifier3)].player == player
+      	        table_of_range[@x + modifier1 * (1 + modifier3)][@y + modifier2 * (2 - modifier3)] = '00'
+      	      else table_of_range[@x + modifier1 * (1 + modifier3)][@y + modifier2 * (2 - modifier3)] = 'xx'
+      	      end
+      	    else table_of_range[@x + modifier1 * (1 + modifier3)][@y + modifier2 * (2 - modifier3)] = '++'
+      	    end
+
+      	  end
+        end
+
+      end
+    end
+  end
+end
+LEGIT_FIGURES = { Rook => 'ro', Bishop => 'bi', Queen => 'qu', Knight => 'kn' }
