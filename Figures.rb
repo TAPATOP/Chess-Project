@@ -83,4 +83,23 @@ class King < Figure
   end
 end
 
-LEGIT_FIGURES = { Rook => 'ro', Bishop => 'bi', Queen => 'qu', Knight => 'kn', King => 'ki' }
+class Pawn < Figure
+  @direction
+  def set_moves(table)
+    if player == 1 then @direction = 1
+    else @direction = -1
+    end
+
+    if table[@x + @direction][@y] == '--' then table_of_range[@x + @direction][@y] = '++' end
+    [-1, 1].each do |modifier|
+      if LEGIT_FIGURES[table[@x + @direction][@y + modifier].class]
+        if table[@x + @direction][@y + modifier].player == @player
+          table_of_range[@x + @direction][@y + modifier] = '++'
+        else table_of_range[@x + @direction][@y + modifier] = 'xx'
+        end
+      end
+    end
+  end
+end
+
+LEGIT_FIGURES = { Rook => 'ro', Bishop => 'bi', Queen => 'qu', Knight => 'kn', King => 'ki', Pawn => 'pa' }

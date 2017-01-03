@@ -14,12 +14,10 @@ player1 = Player.new
 player2 = Player.new
 
 
-player2.add_figure(rook1 = Rook.new(4, 5, 2))
-player1.add_figure(knight1 = King.new(5, 5, 1))
-player2.add_figure(rook3 = Rook.new(4, 6, 2))
-player2.add_figure(bishop1 = Bishop.new(6, 5, 2))
-
-player1.add_figure(queen1 = Bishop.new(5, 4, 1))
+#player1.add_figure(pawn1 = Pawn.new(2, 1, 1))
+player1.add_figure(pawn2 = Pawn.new(2, 2, 1))
+#player1.add_figure(pawn3 = Pawn.new(2, 3, 1))
+player2.add_figure(rook1 = Rook.new(3, 2, 1))
 
 table.put_figures(player1.figures)
 table.put_figures(player2.figures)
@@ -30,7 +28,7 @@ puts
 player1.generate_table_of_range(table)
 player1.table_of_range.display
 puts
-# table.display
+table.display
 
 / test TO DO
 
