@@ -8,6 +8,7 @@ module StraightMoves
         end
         break
       end
+      # if table_of_range[index][figure.y] != '--' then break end
       figure.table_of_range.squares[index][figure.y] = '++'
     end
   end
@@ -20,6 +21,7 @@ module StraightMoves
         end
         break
       end
+      # if table_of_range[index][figure.y] != '--' then break end
       figure.table_of_range.squares[index][figure.y] = '++'
     end
   end
@@ -32,6 +34,7 @@ module StraightMoves
         end
         break
       end
+      # if table_of_range[figure.x][index] != '--' then break end
       figure.table_of_range.squares[figure.x][index] = '++'
     end
   end
@@ -44,6 +47,7 @@ module StraightMoves
         end
         break
       end
+      # if table_of_range[figure.x][index] != '--' then break end
       figure.table_of_range.squares[figure.x][index] = '++'
     end
   end

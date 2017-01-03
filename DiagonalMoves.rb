@@ -10,6 +10,7 @@ module DiagonalMoves
         end
         break
       end
+      # if table_of_range[figure.x - index][figure.y - index] != '--' then break end
       figure.table_of_range.squares[figure.x - index][figure.y - index] = '++'
     end  	
   end
@@ -25,6 +26,7 @@ module DiagonalMoves
         end
         break
       end
+      # if table_of_range[figure.x + index][figure.y - index] != '--' then break end
       figure.table_of_range.squares[figure.x + index][figure.y - index] = '++'
     end  	
   end
@@ -40,6 +42,7 @@ module DiagonalMoves
         end
         break
       end
+      # if table_of_range[figure.x - index][figure.y + index] != '--' then break end
       figure.table_of_range.squares[figure.x - index][figure.y + index] = '++'
     end 
   end
@@ -55,6 +58,7 @@ module DiagonalMoves
         end
         break
       end
+      # if table_of_range[figure.x + index][figure.y + index] != '--' then break end
       figure.table_of_range.squares[figure.x + index][figure.y + index] = '++'
     end
   end
