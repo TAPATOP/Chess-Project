@@ -12,6 +12,6 @@ class Player
   end
 
   def generate_table_of_range
-
+    
   end
 end

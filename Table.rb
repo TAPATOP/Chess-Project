@@ -4,6 +4,7 @@ class Table
 
   def initialize
     @squares = Array.new(9) { Array.new(9, '--') }
+    format_table
   end
 
   def [](index)
