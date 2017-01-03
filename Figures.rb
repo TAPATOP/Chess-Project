@@ -41,7 +41,6 @@ class Queen < Figure
 end
 
 class Knight < Figure
-
   def set_moves(table)
     [-1, 1].each do |modifier1|
       [-1, 1].each do |modifier2|
@@ -65,4 +64,23 @@ class Knight < Figure
     end
   end
 end
-LEGIT_FIGURES = { Rook => 'ro', Bishop => 'bi', Queen => 'qu', Knight => 'kn' }
+
+class King < Figure
+  def set_moves(table)
+  	[-1, 0, 1].each do |modifier1|
+  	  [-1, 0, 1].each do |modifier2|
+  	  	if modifier1 != 0 || modifier2 !=0
+  	  	  if LEGIT_FIGURES[table[@x + modifier1][@y + modifier2].class]
+  	  	  	if table[@x + modifier1][@y + modifier2].player == player
+  	  	  	  table_of_range[@x + modifier1][@y + modifier2] = '00'
+  	  	  	else table_of_range[@x + modifier1][@y + modifier2] = 'xx'
+  	  	  	end
+  	  	  else table_of_range[@x + modifier1][@y + modifier2] = '++' if table[@x + modifier1][@y + modifier2] == '--'
+  	  	  end
+  	  	end
+  	  end
+  	end
+  end
+end
+
+LEGIT_FIGURES = { Rook => 'ro', Bishop => 'bi', Queen => 'qu', Knight => 'kn', King => 'ki' }

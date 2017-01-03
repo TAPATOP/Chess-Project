@@ -15,7 +15,7 @@ player2 = Player.new
 
 
 player2.add_figure(rook1 = Rook.new(4, 5, 2))
-player1.add_figure(knight1 = Knight.new(6, 6, 1))
+player1.add_figure(knight1 = King.new(5, 5, 1))
 player2.add_figure(rook3 = Rook.new(4, 6, 2))
 player2.add_figure(bishop1 = Bishop.new(6, 5, 2))
 
