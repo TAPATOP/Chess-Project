@@ -94,7 +94,7 @@ class Pawn < Figure
     [-1, 1].each do |modifier|
       if LEGIT_FIGURES[table[@x + @direction][@y + modifier].class]
         if table[@x + @direction][@y + modifier].player == @player
-          table_of_range[@x + @direction][@y + modifier] = '++'
+          table_of_range[@x + @direction][@y + modifier] = '00'
         else table_of_range[@x + @direction][@y + modifier] = 'xx'
         end
       end

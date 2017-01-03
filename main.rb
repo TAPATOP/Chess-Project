@@ -14,9 +14,9 @@ player1 = Player.new
 player2 = Player.new
 
 
-#player1.add_figure(pawn1 = Pawn.new(2, 1, 1))
+player1.add_figure(pawn1 = Pawn.new(2, 1, 1))
 player1.add_figure(pawn2 = Pawn.new(2, 2, 1))
-#player1.add_figure(pawn3 = Pawn.new(2, 3, 1))
+player1.add_figure(pawn3 = Pawn.new(2, 3, 1))
 player2.add_figure(rook1 = Rook.new(3, 2, 1))
 
 table.put_figures(player1.figures)
