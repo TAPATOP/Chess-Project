@@ -8,24 +8,80 @@ load 'Player.rb'
 include StraightMoves
 include DiagonalMoves
 
+def turn(table, attacker, defender)
+  while(true) do
+
+    while(true) do
+      puts "Player #{attacker.id} turn."
+      puts 'X:'
+      x = gets.chomp.to_i
+      if x < 1 || x > 8
+        puts 'invalid coordinates, try again'
+        next
+      end
+      puts 'Y:'
+      y = gets.chomp.to_i
+      if y < 1 || y > 8
+        puts 'invalid coordinates, try again'
+        next
+      end
+    
+      puts 'DX:'
+      dx = gets.chomp.to_i
+      if dx < 1 || dx > 8
+        puts 'invalid coordinates, try again'
+        next
+      end
+    
+      puts 'DY:'
+      dy = gets.chomp.to_i
+      if dy < 1 || dy > 8
+        puts 'invalid coordinates, try again'
+        next
+        else break
+      end
+    end
+  
+    if move(table, attacker, defender, x, y, dx, dy) == 1 then next end
+    puts
+  
+    attacker.table_of_range.display
+    puts
+    
+    defender.table_of_range.display
+    puts
+    
+    table.display
+    break
+  end
+end
+
 def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNum, FixNum, FixNum, FixNum
   if LEGIT_FIGURES[table[x][y].class] && table[x][y].player == attacker.id
 
     if table[x][y].table_of_range[dx][dy] == '++'
       to_be_changed = attacker.figures.find { |figure| figure != nil && figure.x == x && figure.y == y }
-      to_be_changed.x = dx
-      to_be_changed.y = dy
+      
+      to_be_changed.move(dx, dy, table)
 
-      table[dx][dy] = to_be_changed
       table[x][y] = '--'
 
     elsif table[x][y].table_of_range[dx][dy] == '00'
       puts 'Can\'t move there, friendly in the way!'
+      return 1
     elsif table[x][y].table_of_range[dx][dy] == 'xx'
       puts 'Enemy killed!'
-      table[dx][dy].x = 0
+      defender.figures.delete(table[dx][dy])
+      
+      defender.figures.each{ |x| puts x}
+      
+      table[x][y].move(dx, dy, table)
+
+      table[x][y] = '--'
+
     else 
-      puts 'You can\'t move there'
+      puts 'You can\'t move there with that'
+      return 1
     end
 
   table = Table.new
@@ -36,7 +92,9 @@ def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNu
   attacker.generate_table_of_range(table)
   defender.generate_table_of_range(table)
 
-  else puts 'You don\'t have a figure there, try again'
+  else 
+  	puts 'You don\'t have a figure there, try again'
+  	return 1
   end
 end
 
@@ -45,13 +103,13 @@ player1 = Player.new(1)
 player2 = Player.new(2)
 
 
-player1.add_figure(pawn1 = Pawn.new(2, 1))
-player1.add_figure(pawn2 = Pawn.new(2, 2))
-player1.add_figure(pawn3 = Pawn.new(2, 3))
-player1.add_figure(pawn4 = Pawn.new(2, 4))
-player1.add_figure(pawn5 = Pawn.new(2, 5))
-player1.add_figure(pawn6 = Pawn.new(2, 6))
-player1.add_figure(pawn7 = Pawn.new(2, 7))
+#player1.add_figure(pawn1 = Pawn.new(2, 1))
+#player1.add_figure(pawn2 = Pawn.new(2, 2))
+#player1.add_figure(pawn3 = Pawn.new(2, 3))
+#player1.add_figure(pawn4 = Pawn.new(2, 4))
+#player1.add_figure(pawn5 = Pawn.new(2, 5))
+#player1.add_figure(pawn6 = Pawn.new(2, 6))
+#player1.add_figure(pawn7 = Pawn.new(2, 7))
 player1.add_figure(pawn8 = Pawn.new(6, 8))
 player1.add_figure(rook1 = Rook.new(1, 1))
 
@@ -81,43 +139,8 @@ dx = 1
 dy = 2
 
 while(true) do
-  puts 'Player 1 turn.'
-  puts 'X:'
-  x = gets.chomp.to_i
-  if x < 1 || x > 8
-  	puts 'invalid coordinates, try again'
-  	next
-  end
-  puts 'Y:'
-  y = gets.chomp.to_i
-  if y < 1 || y > 8
-  	puts 'invalid coordinates, try again'
-  	next
-  end
-
-  puts 'DX:'
-  dx = gets.chomp.to_i
-  if dx < 1 || dx > 8
-  	puts 'invalid coordinates, try again'
-  	next
-  end
-
-  puts 'DY:'
-  dy = gets.chomp.to_i
-  if dy < 1 || dy > 8
-  	puts 'invalid coordinates, try again'
-  	next
-  end
-
-  move(table, player1, player2, x, y, dx, dy)
-  puts
-  player1.table_of_range.display
-  puts
-  
-  player2.table_of_range.display
-  puts
-  
-  table.display
+  turn(table, player1, player2)
+  turn(table, player2, player1)
 end
 / test TO DO
 

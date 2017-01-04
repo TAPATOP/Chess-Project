@@ -9,6 +9,12 @@ class Figure
     @y = y
     @table_of_range = Table.new
   end
+
+  def move(x, y, table)
+  	@x = x
+  	@y = y
+  	table[x][y] = self
+  end
 end
 
 # obviously rook
@@ -96,7 +102,6 @@ class Pawn < Figure
     
     if @x != 8 && x!= 1
       if table[@x + @direction][@y] == '--' then table_of_range[@x + @direction][@y] = '++' end
-      	puts 'i blow up below'
       [-1, 1].each do |modifier|
         if LEGIT_FIGURES[table[@x + @direction][@y + modifier].class]
           if table[@x + @direction][@y + modifier].player == @player
