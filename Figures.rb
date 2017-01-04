@@ -2,13 +2,11 @@
 
 # inherited by all figures, it's just for interface
 class Figure
-  attr_accessor :x, :y, :table_of_range
-  attr_reader :player
+  attr_accessor :x, :y, :table_of_range, :player
 
-  def initialize(x, y, player)
+  def initialize(x, y)
     @x = x
     @y = y
-    @player = player
     @table_of_range = Table.new
   end
 end
@@ -18,6 +16,7 @@ class Rook < Figure
   include StraightMoves
 
   def set_moves(table)
+  	@table_of_range = Table.new
   	straight_moves(self, table)
   end
 end
@@ -26,6 +25,7 @@ class Bishop < Figure
   include DiagonalMoves
 
   def set_moves(table)
+  	@table_of_range = Table.new
   	diagonal_moves(self, table)
   end
 end
@@ -35,6 +35,7 @@ class Queen < Figure
   include DiagonalMoves
   
   def set_moves(table)
+  	@table_of_range = Table.new
   	straight_moves(self, table)
   	diagonal_moves(self, table)
   end
@@ -42,6 +43,7 @@ end
 
 class Knight < Figure
   def set_moves(table)
+  	@table_of_range = Table.new
     [-1, 1].each do |modifier1|
       [-1, 1].each do |modifier2|
       [0, 1].each do |modifier3|
@@ -67,6 +69,7 @@ end
 
 class King < Figure
   def set_moves(table)
+  	@table_of_range = Table.new
   	[-1, 0, 1].each do |modifier1|
   	  [-1, 0, 1].each do |modifier2|
   	  	if modifier1 != 0 || modifier2 !=0
@@ -86,6 +89,7 @@ end
 class Pawn < Figure
   @direction
   def set_moves(table)
+  	@table_of_range = Table.new
     if player == 1 then @direction = 1
     else @direction = -1
     end
