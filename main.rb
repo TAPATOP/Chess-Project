@@ -10,7 +10,7 @@ include DiagonalMoves
 
 def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNum, FixNum, FixNum, FixNum
   if LEGIT_FIGURES[table[x][y].class] && table[x][y].player == attacker.id
-  
+
     if table[x][y].table_of_range[dx][dy] == '++'
       to_be_changed = attacker.figures.find { |figure| figure != nil && figure.x == x && figure.y == y }
       to_be_changed.x = dx
@@ -52,10 +52,10 @@ player1.add_figure(pawn4 = Pawn.new(2, 4))
 player1.add_figure(pawn5 = Pawn.new(2, 5))
 player1.add_figure(pawn6 = Pawn.new(2, 6))
 player1.add_figure(pawn7 = Pawn.new(2, 7))
-player1.add_figure(pawn8 = Pawn.new(2, 8))
+player1.add_figure(pawn8 = Pawn.new(6, 8))
 player1.add_figure(rook1 = Rook.new(1, 1))
 
-player2.add_figure(queen1 = King.new(1, 8))
+player2.add_figure(queen1 = Queen.new(1, 8))
 
 #player2.add_figure(pawn21 = Pawn.new(3, 1))
 #player2.add_figure(pawn22 = Pawn.new(3, 2))
@@ -80,16 +80,45 @@ y = 8
 dx = 1
 dy = 2
 
-move(table, player2, player1, x, y, dx, dy)
-puts
-player1.table_of_range.display
-puts
+while(true) do
+  puts 'Player 1 turn.'
+  puts 'X:'
+  x = gets.chomp.to_i
+  if x < 1 || x > 8
+  	puts 'invalid coordinates, try again'
+  	next
+  end
+  puts 'Y:'
+  y = gets.chomp.to_i
+  if y < 1 || y > 8
+  	puts 'invalid coordinates, try again'
+  	next
+  end
 
-player2.table_of_range.display
-puts
+  puts 'DX:'
+  dx = gets.chomp.to_i
+  if dx < 1 || dx > 8
+  	puts 'invalid coordinates, try again'
+  	next
+  end
 
-table.display
+  puts 'DY:'
+  dy = gets.chomp.to_i
+  if dy < 1 || dy > 8
+  	puts 'invalid coordinates, try again'
+  	next
+  end
 
+  move(table, player1, player2, x, y, dx, dy)
+  puts
+  player1.table_of_range.display
+  puts
+  
+  player2.table_of_range.display
+  puts
+  
+  table.display
+end
 / test TO DO
 
 legit figure name

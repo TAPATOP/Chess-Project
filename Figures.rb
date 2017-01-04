@@ -90,16 +90,19 @@ class Pawn < Figure
   @direction
   def set_moves(table)
   	@table_of_range = Table.new
-    if player == 1 then @direction = 1
+    if @player == 1 then @direction = 1
     else @direction = -1
     end
-
-    if table[@x + @direction][@y] == '--' then table_of_range[@x + @direction][@y] = '++' end
-    [-1, 1].each do |modifier|
-      if LEGIT_FIGURES[table[@x + @direction][@y + modifier].class]
-        if table[@x + @direction][@y + modifier].player == @player
-          table_of_range[@x + @direction][@y + modifier] = '00'
-        else table_of_range[@x + @direction][@y + modifier] = 'xx'
+    
+    if @x != 8 && x!= 1
+      if table[@x + @direction][@y] == '--' then table_of_range[@x + @direction][@y] = '++' end
+      	puts 'i blow up below'
+      [-1, 1].each do |modifier|
+        if LEGIT_FIGURES[table[@x + @direction][@y + modifier].class]
+          if table[@x + @direction][@y + modifier].player == @player
+            table_of_range[@x + @direction][@y + modifier] = '00'
+          else table_of_range[@x + @direction][@y + modifier] = 'xx'
+          end
         end
       end
     end
