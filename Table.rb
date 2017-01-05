@@ -42,7 +42,7 @@ class Table
   end
   
   def put_figures(figures)
-  	figures.each { |figure| put_figure(figure) if figure != nil }
+    figures.each { |figure| put_figure(figure) if figure != nil }
   end
 
   def peek

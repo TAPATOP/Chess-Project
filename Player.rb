@@ -10,19 +10,19 @@ class Player
   end
 
   def add_figure(figure)
-  	if figure.x > 0 && figure.y > 0 && figure.x < 9 && figure.y < 9
-  	@figures.push(figure)
-  	figure.player = @id
+    if figure.x > 0 && figure.y > 0 && figure.x < 9 && figure.y < 9
+    @figures.push(figure)
+    figure.player = @id
     else puts 'figure you\'re trying to add to player is out of base boundaries'
     end
   end
 
   def add_figures(figures)
-  	figures.each { |figure| add_figure(figure) }
+    figures.each { |figure| add_figure(figure) }
   end
 
   def generate_table_of_range(table)
-  	@table_of_range = Table.new
+    @table_of_range = Table.new
     @figures.each do |figure|
 
       figure.set_moves(table) if figure != nil
@@ -32,7 +32,7 @@ class Player
         figure.table_of_range[i].each_index do |j|
 
           if (@table_of_range[i][j] == '--' && figure.table_of_range[i][j] != '--')
-          	@table_of_range[i][j] = figure.table_of_range[i][j]
+            @table_of_range[i][j] = figure.table_of_range[i][j]
           end
 
         end

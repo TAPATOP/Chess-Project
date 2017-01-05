@@ -10,49 +10,79 @@ include DiagonalMoves
 
 def turn(table, attacker, defender)
   while(true) do
+    puts "Player #{attacker.id} turn. Choose command: move, inspect"
+    command = gets.chomp
 
-    while(true) do
-      puts "Player #{attacker.id} turn."
+    if command == 'move'
+      while(true) do
+        puts 'X:'
+        x = gets.chomp.to_i
+        if x < 1 || x > 8
+          puts 'invalid coordinates, try again'
+          next
+        end
+        puts 'Y:'
+        y = gets.chomp.to_i
+        if y < 1 || y > 8
+          puts 'invalid coordinates, try again'
+          next
+        end
+      
+        puts 'DX:'
+        dx = gets.chomp.to_i
+        if dx < 1 || dx > 8
+          puts 'invalid coordinates, try again'
+          next
+        end
+      
+        puts 'DY:'
+        dy = gets.chomp.to_i
+        if dy < 1 || dy > 8
+          puts 'invalid coordinates, try again'
+          next
+        end
+        break
+      end
+
+      if move(table, attacker, defender, x, y, dx, dy) == 1 then next end
+      puts
+    
+      attacker.table_of_range.display
+      puts
+      
+      defender.table_of_range.display
+      puts
+      
+      table.display
+      break
+
+    elsif command == 'inspect'
       puts 'X:'
-      x = gets.chomp.to_i
-      if x < 1 || x > 8
-        puts 'invalid coordinates, try again'
+        x = gets.chomp.to_i
+        if x < 1 || x > 8
+          puts 'invalid coordinates, try again'
+          next
+        end
+        puts 'Y:'
+        y = gets.chomp.to_i
+        if y < 1 || y > 8
+          puts 'invalid coordinates, try again'
+          next
+        end
+
+        if LEGIT_FIGURES[table[x][y].class] && table[x][y].player == attacker.id
+          table[x][y].table_of_range.display
+          next
+        else
+          puts "This isn\'t player #{ attacker.id }\'s figure! Try again"
         next
-      end
-      puts 'Y:'
-      y = gets.chomp.to_i
-      if y < 1 || y > 8
-        puts 'invalid coordinates, try again'
-        next
-      end
-    
-      puts 'DX:'
-      dx = gets.chomp.to_i
-      if dx < 1 || dx > 8
-        puts 'invalid coordinates, try again'
-        next
-      end
-    
-      puts 'DY:'
-      dy = gets.chomp.to_i
-      if dy < 1 || dy > 8
-        puts 'invalid coordinates, try again'
-        next
-        else break
-      end
+        end
+    else 
+      puts 'Unrecognized command! Try again.'
+      next
     end
-  
-    if move(table, attacker, defender, x, y, dx, dy) == 1 then next end
-    puts
-  
-    attacker.table_of_range.display
-    puts
-    
-    defender.table_of_range.display
-    puts
-    
-    table.display
     break
+    
   end
 end
 
@@ -60,7 +90,7 @@ def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNu
   if LEGIT_FIGURES[table[x][y].class] && table[x][y].player == attacker.id
 
     if table[x][y].table_of_range[dx][dy] == '++'
-      to_be_changed = attacker.figures.find { |figure| figure != nil && figure.x == x && figure.y == y }
+      to_be_changed = attacker.figures.find { |figure| !figure.nil? && figure.x == x && figure.y == y }
       
       to_be_changed.move(dx, dy, table)
 
@@ -72,8 +102,6 @@ def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNu
     elsif table[x][y].table_of_range[dx][dy] == 'xx'
       puts 'Enemy killed!'
       defender.figures.delete(table[dx][dy])
-      
-      defender.figures.each{ |x| puts x}
       
       table[x][y].move(dx, dy, table)
 
@@ -103,26 +131,26 @@ player1 = Player.new(1)
 player2 = Player.new(2)
 
 
-#player1.add_figure(pawn1 = Pawn.new(2, 1))
-#player1.add_figure(pawn2 = Pawn.new(2, 2))
-#player1.add_figure(pawn3 = Pawn.new(2, 3))
-#player1.add_figure(pawn4 = Pawn.new(2, 4))
-#player1.add_figure(pawn5 = Pawn.new(2, 5))
-#player1.add_figure(pawn6 = Pawn.new(2, 6))
-#player1.add_figure(pawn7 = Pawn.new(2, 7))
-player1.add_figure(pawn8 = Pawn.new(6, 8))
+player1.add_figure(pawn1 = Pawn.new(2, 1))
+player1.add_figure(pawn2 = Pawn.new(2, 2))
+player1.add_figure(pawn3 = Pawn.new(2, 3))
+player1.add_figure(pawn4 = Pawn.new(2, 4))
+player1.add_figure(pawn5 = Pawn.new(2, 5))
+player1.add_figure(pawn6 = Pawn.new(2, 6))
+player1.add_figure(pawn7 = Pawn.new(2, 7))
+player1.add_figure(pawn8 = Pawn.new(2, 8))
 player1.add_figure(rook1 = Rook.new(1, 1))
+player1.add_figure(rook2 = Rook.new(1, 8))
+player1.add_figure(queen1 = Queen.new(1, 4))
 
-player2.add_figure(queen1 = Queen.new(1, 8))
-
-#player2.add_figure(pawn21 = Pawn.new(3, 1))
-#player2.add_figure(pawn22 = Pawn.new(3, 2))
-#player2.add_figure(pawn23 = Pawn.new(3, 3))
-#player2.add_figure(pawn24 = Pawn.new(3, 4))
-#player2.add_figure(pawn25 = Pawn.new(3, 5))
-#player2.add_figure(pawn26 = Pawn.new(3, 6))
-#player2.add_figure(pawn27 = Pawn.new(3, 7))
-#player2.add_figure(pawn28 = Pawn.new(3, 8))
+player2.add_figure(pawn21 = Pawn.new(7, 1))
+player2.add_figure(pawn22 = Pawn.new(7, 2))
+player2.add_figure(pawn23 = Pawn.new(7, 3))
+player2.add_figure(pawn24 = Pawn.new(7, 4))
+player2.add_figure(pawn25 = Pawn.new(7, 5))
+player2.add_figure(pawn26 = Pawn.new(7, 6))
+player2.add_figure(pawn27 = Pawn.new(7, 7))
+player2.add_figure(pawn28 = Pawn.new(7, 8))
 
 table.put_figures(player1.figures)
 table.put_figures(player2.figures)
