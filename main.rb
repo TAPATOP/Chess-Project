@@ -11,42 +11,44 @@ include DiagonalMoves
 def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNum, FixNum, FixNum, FixNum
   if LEGIT_FIGURES[table[x][y].class] && table[x][y].player == attacker.id
 
-    if table[x][y].table_of_range[dx][dy] == '++'
-      to_be_changed = attacker.figures.find { |figure| !figure.nil? && figure.x == x && figure.y == y }
-      
-      to_be_changed.move(dx, dy, table)
+  	if table[x][y].move(dx, dy, defender, table) == 1 then return 1 end
 
-      table[x][y] = '--'
+    table = Table.new
 
-    elsif table[x][y].table_of_range[dx][dy] == '00'
-      puts 'Can\'t move there, friendly in the way!'
-      return 1
-    elsif table[x][y].table_of_range[dx][dy] == 'xx'
-      puts 'Enemy killed!'
-      defender.figures.delete(table[dx][dy])
-      
-      table[x][y].move(dx, dy, table)
+    table.put_figures(attacker.figures)
+    table.put_figures(defender.figures)
+    
+    attacker.generate_table_of_range(table)
+    
 
-      table[x][y] = '--'
+    holderX, holderY = 0, 0
 
-    else 
-      puts 'You can\'t move there with that'
-      return 1
+    defender.table_of_range.squares.each_index do |i|
+      defender.table_of_range.squares[i].each_index do |j|
+        if defender.table_of_range[i][j] == '!'
+          holderX = i
+          holderY = j
+          break
+        end
+      end
     end
 
-  table = Table.new
+    defender.generate_table_of_range(table)
 
-  table.put_figures(attacker.figures)
-  table.put_figures(defender.figures)
-  
-  attacker.generate_table_of_range(table)
-  defender.generate_table_of_range(table)
+    defender.table_of_range[holderX][holderY] = '!!' if holderX != 0
+
+    defender.figures.each do |figure|
+      if figure.class == Pawn && figure.x + figure.direction == holderX && ((figure.y - holderY).abs == 1)
+        figure.table_of_range[holderX][holderY] = '!!'
+      end
+    end
 
   else 
   	puts 'You don\'t have a figure there, try again'
   	return 1
   end
 end
+
 def turn(table, attacker, defender)
   while(true) do
     puts "Player #{attacker.id} turn. Choose command: move, inspect, display"
@@ -89,7 +91,7 @@ def turn(table, attacker, defender)
     
       attacker.table_of_range.display
       puts
-      
+
       defender.table_of_range.display
       puts
       
@@ -111,6 +113,7 @@ def turn(table, attacker, defender)
         end
 
         if LEGIT_FIGURES[table[x][y].class] && table[x][y].player == attacker.id
+          p table[x][y]
           table[x][y].table_of_range.display
         else
           puts "This isn\'t player #{ attacker.id }\'s figure! Try again"
@@ -144,7 +147,7 @@ player1.add_figure(rook1 = Rook.new(1, 1))
 player1.add_figure(rook2 = Rook.new(1, 8))
 player1.add_figure(queen1 = Queen.new(1, 4))
 
-player2.add_figure(pawn21 = Pawn.new(7, 1))
+player2.add_figure(pawn21 = Pawn.new(4, 1))
 player2.add_figure(pawn22 = Pawn.new(7, 2))
 player2.add_figure(pawn23 = Pawn.new(7, 3))
 player2.add_figure(pawn24 = Pawn.new(7, 4))
@@ -160,12 +163,6 @@ player1.generate_table_of_range(table)
 player2.generate_table_of_range(table)
 
 table.display
-
-x = 1
-y = 8
-
-dx = 1
-dy = 2
 
 while(true) do
   turn(table, player1, player2)

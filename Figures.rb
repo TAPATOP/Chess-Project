@@ -10,11 +10,44 @@ class Figure
     @table_of_range = Table.new
   end
 
-  def move(x, y, table)
+  def makeMove(x, y, defender, table)
     @x = x
     @y = y
     table[x][y] = self
   end
+  
+  def move(x, y, defender, table)
+    
+  	if @table_of_range[x][y] == '++'
+
+      table[@x][@y] = '--'
+
+      makeMove(x, y, defender, table)
+
+    elsif @table_of_range[x][y] == '00'
+
+      puts 'Can\'t move there, friendly in the way!'
+      return 1
+
+    elsif @table_of_range[x][y] == 'xx'
+      puts 'Enemy killed!'
+      defender.figures.delete(table[x][y])
+
+      table[@x][@y] = '--'
+
+      makeMove(x, y, defender, table)
+
+
+    elsif @table_of_range[x][y] == '!!' && self.class == Pawn # move this above
+      
+      table[@x][@y] = '--'
+      makeMove(x, y, defender, table)
+    else
+      puts 'You can\'t move there with that'
+      return 1
+    end
+  end
+
 end
 
 # obviously rook
@@ -93,7 +126,7 @@ class King < Figure
 end
 
 class Pawn < Figure
-  @direction
+  attr_accessor :direction
   @en_passant
 
   def set_moves(table)
@@ -108,25 +141,54 @@ class Pawn < Figure
         table_of_range[@x + @direction][@y] = '++' # this gets the possible ordinary moves
         if table[@x + 2 * @direction][@y] == '--' && @x - @direction == 1 || @x - @direction == 8
           @en_passant = 1
-          table_of_range[@x + 2 * @direction][@y] = '++'
+          table_of_range[@x + 2 * @direction][@y] = '++' # this adds the second move from the start and enables en passant
         end
       end
 
       [-1, 1].each do |modifier|
+
+      	# the if below checks for possible normal attacks
         if LEGIT_FIGURES[table[@x + @direction][@y + modifier].class]
           if table[@x + @direction][@y + modifier].player == @player
             table_of_range[@x + @direction][@y + modifier] = '00'
           else table_of_range[@x + @direction][@y + modifier] = 'xx'
           end
         end
+
+        /# the if below checks for possible en passant
+        if LEGIT_FIGURES[table[@x][@y + modifier].class] == Pawn
+          if table[@x][@y + modifier].en_passant == 1
+          	@table_of_range[@x + @direction][@y + modifier] = 'xx'
+          	table[@x][@y + modifier].en_passant = 0
+          end
+        end/
+
       end
     end
   end
 
   alias_method :move_parent, :move
 
-  def move(x, y, table)
+  def makeMove(x, y, defender, table)
+  	originalX = @x
+  	if table_of_range[x][y] == '!!'# && (@x - x).abs == 1 && (@y - y).abs == 1
+  	  puts "EN PASSANTE'D"
+  	  table[@x][@y] = '--'
+  	  @x = x
+  	  @y = y
+  	  defender.figures.delete(table[@x - @direction][@y])
+  	  table[@x - @direction][@y] = '--'
+  	end
   	super
+
+  	#creates en passante conditions
+  	if (originalX - @x).abs == 2
+  	  if @en_passant == 1
+  	    defender.table_of_range[x - @direction][y] = '!'
+  	    defender.table_of_range.display
+  	  end
+  	  @en_passant = 0
+  	end
   end
 end
 
