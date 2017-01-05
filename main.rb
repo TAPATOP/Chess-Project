@@ -8,84 +8,6 @@ load 'Player.rb'
 include StraightMoves
 include DiagonalMoves
 
-def turn(table, attacker, defender)
-  while(true) do
-    puts "Player #{attacker.id} turn. Choose command: move, inspect"
-    command = gets.chomp
-
-    if command == 'move'
-      while(true) do
-        puts 'X:'
-        x = gets.chomp.to_i
-        if x < 1 || x > 8
-          puts 'invalid coordinates, try again'
-          next
-        end
-        puts 'Y:'
-        y = gets.chomp.to_i
-        if y < 1 || y > 8
-          puts 'invalid coordinates, try again'
-          next
-        end
-      
-        puts 'DX:'
-        dx = gets.chomp.to_i
-        if dx < 1 || dx > 8
-          puts 'invalid coordinates, try again'
-          next
-        end
-      
-        puts 'DY:'
-        dy = gets.chomp.to_i
-        if dy < 1 || dy > 8
-          puts 'invalid coordinates, try again'
-          next
-        end
-        break
-      end
-
-      if move(table, attacker, defender, x, y, dx, dy) == 1 then next end
-      puts
-    
-      attacker.table_of_range.display
-      puts
-      
-      defender.table_of_range.display
-      puts
-      
-      table.display
-      break
-
-    elsif command == 'inspect'
-      puts 'X:'
-        x = gets.chomp.to_i
-        if x < 1 || x > 8
-          puts 'invalid coordinates, try again'
-          next
-        end
-        puts 'Y:'
-        y = gets.chomp.to_i
-        if y < 1 || y > 8
-          puts 'invalid coordinates, try again'
-          next
-        end
-
-        if LEGIT_FIGURES[table[x][y].class] && table[x][y].player == attacker.id
-          table[x][y].table_of_range.display
-          next
-        else
-          puts "This isn\'t player #{ attacker.id }\'s figure! Try again"
-        next
-        end
-    else 
-      puts 'Unrecognized command! Try again.'
-      next
-    end
-    break
-    
-  end
-end
-
 def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNum, FixNum, FixNum, FixNum
   if LEGIT_FIGURES[table[x][y].class] && table[x][y].player == attacker.id
 
@@ -125,7 +47,86 @@ def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNu
   	return 1
   end
 end
+def turn(table, attacker, defender)
+  while(true) do
+    puts "Player #{attacker.id} turn. Choose command: move, inspect, display"
+    command = gets.chomp
 
+    if command == 'move'
+      while(true) do
+        puts 'X:'
+        x = gets.chomp.to_i
+        if x < 1 || x > 8
+          puts 'invalid coordinates, try again'
+          next
+        end
+        puts 'Y:'
+        y = gets.chomp.to_i
+        if y < 1 || y > 8
+          puts 'invalid coordinates, try again'
+          next
+        end
+      
+        puts 'DX:'
+        dx = gets.chomp.to_i
+        if dx < 1 || dx > 8
+          puts 'invalid coordinates, try again'
+          next
+        end
+      
+        puts 'DY:'
+        dy = gets.chomp.to_i
+        if dy < 1 || dy > 8
+          puts 'invalid coordinates, try again'
+          next
+        end
+        break
+      end
+      # validation above
+
+      if move(table, attacker, defender, x, y, dx, dy) == 1 then next end
+      puts
+    
+      attacker.table_of_range.display
+      puts
+      
+      defender.table_of_range.display
+      puts
+      
+      table.display
+      break
+
+    elsif command == 'inspect'
+      puts 'X:'
+        x = gets.chomp.to_i
+        if x < 1 || x > 8
+          puts 'Invalid coordinates, try again'
+          next
+        end
+        puts 'Y:'
+        y = gets.chomp.to_i
+        if y < 1 || y > 8
+          puts 'Invalid coordinates, try again'
+          next
+        end
+
+        if LEGIT_FIGURES[table[x][y].class] && table[x][y].player == attacker.id
+          table[x][y].table_of_range.display
+        else
+          puts "This isn\'t player #{ attacker.id }\'s figure! Try again"
+        end
+        next
+    elsif command == 'display'
+      table.display
+      next
+    else 
+      puts 'Unrecognized command! Try again.'
+      next
+    end
+    break
+    
+  end
+end
 table = Table.new
 player1 = Player.new(1)
 player2 = Player.new(2)

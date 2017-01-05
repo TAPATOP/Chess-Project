@@ -94,14 +94,24 @@ end
 
 class Pawn < Figure
   @direction
+  @en_passant
+
   def set_moves(table)
     @table_of_range = Table.new
     if @player == 1 then @direction = 1
     else @direction = -1
     end
     
-    if @x != 8 && x!= 1
-      if table[@x + @direction][@y] == '--' then table_of_range[@x + @direction][@y] = '++' end
+    if @x != 8 && x!= 1 # checks if pawn can move at all
+
+      if table[@x + @direction][@y] == '--'
+        table_of_range[@x + @direction][@y] = '++' # this gets the possible ordinary moves
+        if table[@x + 2 * @direction][@y] == '--' && @x - @direction == 1 || @x - @direction == 8
+          @en_passant = 1
+          table_of_range[@x + 2 * @direction][@y] = '++'
+        end
+      end
+
       [-1, 1].each do |modifier|
         if LEGIT_FIGURES[table[@x + @direction][@y + modifier].class]
           if table[@x + @direction][@y + modifier].player == @player
@@ -111,6 +121,12 @@ class Pawn < Figure
         end
       end
     end
+  end
+
+  alias_method :move_parent, :move
+
+  def move(x, y, table)
+  	super
   end
 end
 
