@@ -27,20 +27,19 @@ class Player
 
       figure.set_moves(table) if figure != nil
       # if figure.x == 0 || figure.y == 0 then @figures.delete(figure) end
-      
+
       figure.table_of_range.squares.each_index do |i|
         figure.table_of_range[i].each_index do |j|
 
           if (@table_of_range[i][j] == '--' && figure.table_of_range[i][j] != '--')
             @table_of_range[i][j] = figure.table_of_range[i][j]
           end
-
         end
       end if figure != nil
     end
   end
 
   def move_figure(table, x, y)
-    
+
   end
 end

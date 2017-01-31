@@ -87,7 +87,7 @@ def turn(table, attacker, defender)
         end
       end
     end
-  	end
+  end
 end
 table = Table.new
 player1 = Player.new(1)
@@ -111,9 +111,9 @@ player2.add_figure(pawn22 = Pawn.new(7, 2))
 player2.add_figure(pawn23 = Pawn.new(7, 3))
 player2.add_figure(pawn24 = Pawn.new(7, 4))
 player2.add_figure(pawn25 = Pawn.new(7, 5))
-player2.add_figure(pawn26 = Pawn.new(7, 6))
+player2.add_figure(pawn26 = Pawn.new(3, 6))
 player2.add_figure(pawn27 = Pawn.new(7, 7))
-player2.add_figure(pawn28 = Pawn.new(7, 8))
+player2.add_figure(pawn28 = Pawn.new(3, 8))
 
 table.put_figures(player1.figures)
 table.put_figures(player2.figures)

@@ -1,6 +1,6 @@
-RSpec.describe 'um' do
+RSpec.describe 'Table' do
 
-  describe'hmm' do
+  describe'movement checks' do
     table = Table.new
     player1 = Player.new(1)
     player2 = Player.new(2)
@@ -31,12 +31,31 @@ RSpec.describe 'um' do
 
     player1.generate_table_of_range(table)
     player2.generate_table_of_range(table)
-    it 'something' do
-      expect(move(table, player1, player2, 2, 2, 4, 2)) .to eq(1)
+
+    move(table, player1, player2, 2, 2, 4, 2)
+    it 'has moved the pawn' do
+      expect(table[2][2]) .to eq('--')
     end
-    it 'something' do
+
+    it 'has moved the pawn to the correct destination' do
+      expect(table[4][2]) .to eq(pawn2)
+    end
+
+    it 'detects en- passante possibility' do
+      expect(player2.table_of_range[3][2]).to eq('!!')
+    end
+
+    it 'moves the pawn' do
       move(table, player2, player1, 4, 1, 3, 2)
-      expect(table[3][2].player) .to eq(2)
+      expect(table[4][1]).to eq('--')
+    end
+
+    it 'moves the pawn to the end' do
+      expect(table[3][2]).to eq(pawn21)
+    end
+
+    it 'removes the p1 pawn' do
+      expect(player1.figures.include? pawn2).to eq(false)
     end
   end
 end

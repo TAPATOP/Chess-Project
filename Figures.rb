@@ -19,16 +19,12 @@ class Figure
   def move(x, y, defender, table)
 
   	if @table_of_range[x][y] == '++'
-
       table[@x][@y] = '--' # tells the table the figure isnt there anymore?
 
       makeMove(x, y, defender, table)
-
     elsif @table_of_range[x][y] == '00'
-
       puts 'Can\'t move there, friendly in the way!'
       return 1
-
     elsif @table_of_range[x][y] == 'xx'
       puts 'Enemy killed!'
       defender.figures.delete(table[x][y])
@@ -36,8 +32,6 @@ class Figure
       table[@x][@y] = '--'
 
       makeMove(x, y, defender, table)
-
-
     elsif @table_of_range[x][y] == '!!' && self.class == Pawn # move this above
 
       table[@x][@y] = '--'
@@ -47,7 +41,6 @@ class Figure
       return 1
     end
   end
-
 end
 
 # obviously rook
@@ -97,10 +90,8 @@ class Knight < Figure
               end
             else table_of_range[@x + modifier1 * (1 + modifier3)][@y + modifier2 * (2 - modifier3)] = '++'
             end
-
           end
         end
-
       end
     end
   end

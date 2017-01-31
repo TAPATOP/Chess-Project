@@ -20,7 +20,6 @@ def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNu
 
     attacker.generate_table_of_range(table)
 
-
     holderX, holderY = 0, 0
 
     defender.table_of_range.squares.each_index do |i|
