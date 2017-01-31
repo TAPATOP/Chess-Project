@@ -1,8 +1,6 @@
 RSpec.describe 'um' do
 
   describe'hmm' do
-    it 'something' do
-
     table = Table.new
     player1 = Player.new(1)
     player2 = Player.new(2)
@@ -33,8 +31,12 @@ RSpec.describe 'um' do
 
     player1.generate_table_of_range(table)
     player2.generate_table_of_range(table)
-
-      expect(move(table, player1, player2, 1, 1, 1, 1)) .to eq(0)
+    it 'something' do
+      expect(move(table, player1, player2, 2, 2, 4, 2)) .to eq(1)
+    end
+    it 'something' do
+      move(table, player2, player1, 4, 1, 3, 2)
+      expect(table[3][2].player) .to eq(2)
     end
   end
 end

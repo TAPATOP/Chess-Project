@@ -42,19 +42,9 @@ def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNu
         figure.table_of_range[holderX][holderY] = '!!'
       end
     end
-
-    puts
-
-    attacker.table_of_range.display
-    puts
-
-    defender.table_of_range.display
-    puts
-
-    table.display
+    return 0
 
   else
-    puts 'You don\'t have a figure there, try again'
     return 1
   end
 end

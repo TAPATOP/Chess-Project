@@ -45,7 +45,17 @@ def turn(table, attacker, defender)
       end
       # validation of coordinates for 'move' above
 
-      if move(table, attacker, defender, x, y, dx, dy) == 1 then next end
+      if move(table, attacker, defender, x, y, dx, dy) == 1
+        puts 'You don\'t have a figure there, try again'
+        next
+      else
+        puts
+        attacker.table_of_range.display
+        puts
+        defender.table_of_range.display
+        puts
+        table.display
+      end
       break
     else
       if command == 'inspect'
