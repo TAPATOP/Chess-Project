@@ -11,8 +11,8 @@ class Player
 
   def add_figure(figure)
     if figure.x > 0 && figure.y > 0 && figure.x < 9 && figure.y < 9
-    @figures.push(figure)
-    figure.player = @id
+      @figures.push(figure)
+      figure.player = @id
     else puts 'figure you\'re trying to add to player is out of base boundaries'
     end
   end

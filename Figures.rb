@@ -1,6 +1,6 @@
 #requires move files
 
-# inherited by all figures, it's just for interface
+# inherited by all figures, aka abstract class
 class Figure
   attr_accessor :x, :y, :table_of_range, :player
 
@@ -15,12 +15,12 @@ class Figure
     @y = y
     table[x][y] = self
   end
-  
+
   def move(x, y, defender, table)
-    
+
   	if @table_of_range[x][y] == '++'
 
-      table[@x][@y] = '--'
+      table[@x][@y] = '--' # tells the table the figure isnt there anymore?
 
       makeMove(x, y, defender, table)
 
@@ -39,7 +39,7 @@ class Figure
 
 
     elsif @table_of_range[x][y] == '!!' && self.class == Pawn # move this above
-      
+
       table[@x][@y] = '--'
       makeMove(x, y, defender, table)
     else
@@ -72,7 +72,7 @@ end
 class Queen < Figure
   include StraightMoves
   include DiagonalMoves
-  
+
   def set_moves(table)
     @table_of_range = Table.new
     straight_moves(self, table)
@@ -87,7 +87,7 @@ class Knight < Figure
       [-1, 1].each do |modifier2|
       [0, 1].each do |modifier3|
 
-          if @x + modifier1 * (1 + modifier3) > 0 && @x + modifier1 * (1 + modifier3) < 9  && 
+          if @x + modifier1 * (1 + modifier3) > 0 && @x + modifier1 * (1 + modifier3) < 9  &&
              @y + modifier2 * (2 - modifier3) > 0 && @y + modifier2 * (2 - modifier3) < 9
 
             if LEGIT_FIGURES[table[@x + modifier1 * (1 + modifier3)][@y + modifier2 * (2 - modifier3)].class]
@@ -134,7 +134,7 @@ class Pawn < Figure
     if @player == 1 then @direction = 1
     else @direction = -1
     end
-    
+
     if @x != 8 && x!= 1 # checks if pawn can move at all
 
       if table[@x + @direction][@y] == '--'
@@ -154,14 +154,6 @@ class Pawn < Figure
           else table_of_range[@x + @direction][@y + modifier] = 'xx'
           end
         end
-
-        /# the if below checks for possible en passant
-        if LEGIT_FIGURES[table[@x][@y + modifier].class] == Pawn
-          if table[@x][@y + modifier].en_passant == 1
-          	@table_of_range[@x + @direction][@y + modifier] = 'xx'
-          	table[@x][@y + modifier].en_passant = 0
-          end
-        end/
 
       end
     end
@@ -185,7 +177,6 @@ class Pawn < Figure
   	if (originalX - @x).abs == 2
   	  if @en_passant == 1
   	    defender.table_of_range[x - @direction][y] = '!'
-  	    defender.table_of_range.display
   	  end
   	  @en_passant = 0
   	end
