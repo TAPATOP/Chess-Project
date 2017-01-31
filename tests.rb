@@ -50,7 +50,6 @@ RSpec.describe 'Table' do
       expect(table[4][1]).to eq('--')
     end
 
-
     it 'moves the pawn to the end' do
       expect(table[3][2]).to eq(pawn21)
     end
@@ -58,5 +57,39 @@ RSpec.describe 'Table' do
     it 'removes the p1 pawn' do
       expect(player1.figures.include? pawn2).to eq(false)
     end
+
+    it 'moves the p1 queen' do
+      move(table, player1, player2, 1, 4, 1, 6)
+      expect(table[1][4]).to eq('--')
+      expect(table[1][6]).to eq(queen1)
+    end
+
+    it 'lets p2 pawn take p1 pawn' do
+      move(table, player2, player1, 3, 6, 2, 7)
+      expect(table[3][6]).to eq('--')
+      expect(table[2][7]).to eq(pawn26)
+      expect(player1.figures.include? pawn7).to eq(false)
+    end
+
+    it 'lets p1 queen take p2 pawn' do
+      move(table, player1, player2, 1, 6, 2, 7)
+      expect(table[1][6]).to eq('--')
+      expect(table[2][7]).to eq(queen1)
+      expect(player2.figures.include? pawn26).to eq(false)
+    end
+
+    it 'lets p2 pawn take p1 queen' do
+      move(table, player2, player1, 3, 8, 2, 7)
+      expect(table[3][8]).to eq('--')
+      expect(table[2][7]).to eq(pawn28)
+      expect(player1.figures.include? queen1).to eq(false)
+    end
+
+    # it 'lets p1 queen take p2 pawn' do
+    #   move(table, player1, player2, 2, 3, 4, 3)
+    # table.display
+    #   expect { move(table, player2, player1, 3, 2, 2, 2) } .to_not change { table.squares }
+    # table.display
+    # end
   end
 end
