@@ -22,9 +22,9 @@ RSpec.describe 'Table' do
     player2.add_figure(pawn23 = Pawn.new(7, 3))
     player2.add_figure(pawn24 = Pawn.new(7, 4))
     player2.add_figure(pawn25 = Pawn.new(7, 5))
-    player2.add_figure(pawn26 = Pawn.new(7, 6))
+    player2.add_figure(pawn26 = Pawn.new(3, 6))
     player2.add_figure(pawn27 = Pawn.new(7, 7))
-    player2.add_figure(pawn28 = Pawn.new(7, 8))
+    player2.add_figure(pawn28 = Pawn.new(3, 8))
 
     table.put_figures(player1.figures)
     table.put_figures(player2.figures)
@@ -32,13 +32,13 @@ RSpec.describe 'Table' do
     player1.generate_table_of_range(table)
     player2.generate_table_of_range(table)
 
-    move(table, player1, player2, 2, 2, 4, 2)
     it 'has moved the pawn' do
-      expect(table[2][2]) .to eq('--')
+      move(table, player1, player2, 2, 2, 4, 2)
+      expect(table[2][2]).to eq('--')
     end
 
     it 'has moved the pawn to the correct destination' do
-      expect(table[4][2]) .to eq(pawn2)
+      expect(table[4][2]).to eq(pawn2)
     end
 
     it 'detects en- passante possibility' do
@@ -49,6 +49,7 @@ RSpec.describe 'Table' do
       move(table, player2, player1, 4, 1, 3, 2)
       expect(table[4][1]).to eq('--')
     end
+
 
     it 'moves the pawn to the end' do
       expect(table[3][2]).to eq(pawn21)
