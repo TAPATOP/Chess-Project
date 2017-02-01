@@ -18,7 +18,7 @@ class Figure
 
   def move(x, y, defender, table)
 
-  	if @table_of_range[x][y] == '++'
+  	if @table_of_range[x][y] == '++' || @table_of_range[x][y] == '!!'
       table[@x][@y] = '--' # tells the table the figure isnt there anymore?
 
       makeMove(x, y, defender, table)

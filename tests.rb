@@ -8,7 +8,7 @@ RSpec.describe 'Table' do
     player1.add_figure(pawn1 = Pawn.new(2, 1))
     player1.add_figure(pawn2 = Pawn.new(2, 2))
     player1.add_figure(pawn3 = Pawn.new(2, 3))
-    player1.add_figure(pawn4 = Pawn.new(2, 4))
+    player1.add_figure(bishop1 = Bishop.new(2, 4))
     player1.add_figure(pawn5 = Pawn.new(2, 5))
     player1.add_figure(pawn6 = Pawn.new(2, 6))
     player1.add_figure(pawn7 = Pawn.new(2, 7))
@@ -25,6 +25,8 @@ RSpec.describe 'Table' do
     player2.add_figure(pawn26 = Pawn.new(3, 6))
     player2.add_figure(pawn27 = Pawn.new(7, 7))
     player2.add_figure(pawn28 = Pawn.new(3, 8))
+    player2.add_figure(rook21 = Rook.new(4, 6))
+    player2.add_figure(knight21 = Knight.new(5, 4))
 
     table.put_figures(player1.figures)
     table.put_figures(player2.figures)
@@ -85,11 +87,26 @@ RSpec.describe 'Table' do
       expect(player1.figures.include? queen1).to eq(false)
     end
 
-    # it 'lets p1 queen take p2 pawn' do
-    #   move(table, player1, player2, 2, 3, 4, 3)
-    # table.display
-    #   expect { move(table, player2, player1, 3, 2, 2, 2) } .to_not change { table.squares }
-    # table.display
-    # end
+    it 'doesn\'t let pawn make an illegal en- passant' do
+      move(table, player1, player2, 2, 3, 4, 3)
+      move(table, player2, player1, 3, 2, 2, 3)
+      move(table, player2, player1, 3, 2, 3, 3)
+      expect(pawn21.x).to eq(3)
+      expect(pawn21.y).to eq(2)
+      expect(player2.table_of_range[3][3]). to eq('!!')
+    end
+
+    it 'eliminates en- passante the following turn' do
+      move(table, player2, player1, 7, 2, 6, 2)
+      expect(player2.table_of_range[3][3]). to eq('--')
+    end
+
+    it 'kills rook with bishop' do
+      move(table, player1, player2, 2, 4, 4, 6)
+      expect(table[2][4]).to eq('--')
+      expect(table[4][6]).to eq(bishop1)
+      expect(player2.figures.include? rook21).to eq(false)
+      table.display
+    end
   end
 end

@@ -89,6 +89,7 @@ def turn(table, attacker, defender)
     end
   end
 end
+
 table = Table.new
 player1 = Player.new(1)
 player2 = Player.new(2)
