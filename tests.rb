@@ -94,11 +94,12 @@ RSpec.describe 'Table' do
       expect(pawn21.x).to eq(3)
       expect(pawn21.y).to eq(2)
       expect(player2.table_of_range[3][3]). to eq('!!')
+      player2.table_of_range.display
     end
 
     it 'eliminates en- passante the following turn' do
       move(table, player2, player1, 7, 2, 6, 2)
-      expect(player2.table_of_range[3][3]). to eq('--')
+      expect(player2.table_of_range[3][3]). to_not eq('!!')
     end
 
     it 'kills rook with bishop' do

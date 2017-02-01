@@ -62,3 +62,17 @@ module StraightMoves
     north_moves(figure, playing_table)
   end
 end
+
+/
+holderX = 0
+holderY = 0
+playing_table.squares.each_index do |i|
+  playing_table.squares[i].each_index do |j|
+    if playing_table[i][j] == '!!'
+      holderX = i
+      holderY = j
+    end
+  end
+end
+figure.table_of_range[holderX][holderY] = '!!' if holderY * holderX != 0
+/

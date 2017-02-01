@@ -38,8 +38,4 @@ class Player
       end if figure != nil
     end
   end
-
-  def move_figure(table, x, y)
-
-  end
 end
