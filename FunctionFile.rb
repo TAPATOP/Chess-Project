@@ -13,17 +13,21 @@ def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNu
 
     if table[x][y].move(dx, dy, defender, table) == 1 then return 1 end
 
-    if table[dx][dy].class == Pawn && table[dx][dy].x == 4 + 4 * table[dx][dy].direction
+    if table[dx][dy].class == Pawn && (table[dx][dy].x + table[dx][dy].direction > 8 || table[dx][dy].x + table[dx][dy].direction < 1)
       puts 'Pawn has reached the end! What do you want to replace it with? The options are:'
-      puts "Rook => 'ro', Bishop => 'bi', Queen => 'qu', Knight => 'kn'"
-      newFig = gets.chomp
-      puts table[dx][dy].class
       attacker.figures.delete(table[dx][dy])
-      puts table[dx][dy].class
-      nuFig = LEGIT_RESTORATION_FIGURES.key(newFig).new(dx, dy)
-      attacker.add_figure(nuFig)
-      table[dx][dy] = nuFig
-      puts table[dx][dy].class
+      while(true)
+        puts "Rook => 'ro', Bishop => 'bi', Queen => 'qu', Knight => 'kn'" # reason for doublequotes is that i'm too lazy to escape all the singlequotes
+        newFig = gets.chomp
+        if LEGIT_RESTORATION_FIGURES.key(newFig) != nil # I have serious questions about this entire shit
+          nuFig = LEGIT_RESTORATION_FIGURES.key(newFig).new(dx, dy)
+          attacker.add_figure(nuFig)
+          table[dx][dy] = nuFig
+          break # aka breack;
+        else
+          puts 'Wrong input, try again, buddy'
+        end
+      end
     end
 
     table = Table.new
@@ -56,8 +60,6 @@ def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNu
         figure.table_of_range[holderX][holderY] = '!!'
       end
     end
-
-    table.display
 
     return 0
 
