@@ -54,6 +54,12 @@ def turn(table, attacker, defender)
         puts
         defender.table_of_range.display
         puts
+
+        table = Table.new()
+
+        table.put_figures(attacker.figures)
+        table.put_figures(defender.figures)
+
         table.display
       end
       break
@@ -95,10 +101,10 @@ player1 = Player.new(1)
 player2 = Player.new(2)
 
 
-player1.add_figure(pawn1 = Pawn.new(2, 1))
+player1.add_figure(pawn1 = Pawn.new(7, 1))
 player1.add_figure(pawn2 = Pawn.new(2, 2))
 player1.add_figure(pawn3 = Pawn.new(2, 3))
-player1.add_figure(pawn4 = Pawn.new(2, 4))
+player1.add_figure(bishop1 = Bishop.new(2, 4))
 player1.add_figure(pawn5 = Pawn.new(2, 5))
 player1.add_figure(pawn6 = Pawn.new(2, 6))
 player1.add_figure(pawn7 = Pawn.new(2, 7))
@@ -115,6 +121,8 @@ player2.add_figure(pawn25 = Pawn.new(7, 5))
 player2.add_figure(pawn26 = Pawn.new(3, 6))
 player2.add_figure(pawn27 = Pawn.new(7, 7))
 player2.add_figure(pawn28 = Pawn.new(3, 8))
+player2.add_figure(rook21 = Rook.new(4, 6))
+player2.add_figure(knight21 = Knight.new(5, 4))
 
 table.put_figures(player1.figures)
 table.put_figures(player2.figures)
@@ -128,9 +136,3 @@ while(true) do
   turn(table, player1, player2)
   turn(table, player2, player1)
 end
-/ test TO DO
-
-legit figure name
-legit coord
-
-/

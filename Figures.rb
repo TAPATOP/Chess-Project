@@ -11,6 +11,7 @@ class Figure
   end
 
   def makeMove(x, y, defender, table)
+    table[@x][@y] = '--'
     @x = x
     @y = y
     table[x][y] = self
@@ -19,8 +20,6 @@ class Figure
   def move(x, y, defender, table)
 
   	if @table_of_range[x][y] == '++' || @table_of_range[x][y] == '!!'
-      table[@x][@y] = '--' # tells the table the figure isnt there anymore?
-
       makeMove(x, y, defender, table)
     elsif @table_of_range[x][y] == '00'
       puts 'Can\'t move there, friendly in the way!'
@@ -130,7 +129,7 @@ class Pawn < Figure
 
       if table[@x + @direction][@y] == '--'
         table_of_range[@x + @direction][@y] = '++' # this gets the possible ordinary moves
-        if table[@x + 2 * @direction][@y] == '--' && @x - @direction == 1 || @x - @direction == 8
+        if @x - @direction == 1 || @x - @direction == 8 && table[@x + 2 * @direction][@y] == '--'
           @en_passant = 1
           table_of_range[@x + 2 * @direction][@y] = '++' # this adds the second move from the start and enables en passant
         end
@@ -175,3 +174,4 @@ class Pawn < Figure
 end
 
 LEGIT_FIGURES = { Rook => 'ro', Bishop => 'bi', Queen => 'qu', Knight => 'kn', King => 'ki', Pawn => 'pa' }
+LEGIT_RESTORATION_FIGURES = { Rook => 'ro', Bishop => 'bi', Queen => 'qu', Knight => 'kn' }

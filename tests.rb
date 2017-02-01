@@ -5,7 +5,7 @@ RSpec.describe 'Table' do
     player1 = Player.new(1)
     player2 = Player.new(2)
 
-    player1.add_figure(pawn1 = Pawn.new(2, 1))
+    player1.add_figure(pawn1 = Pawn.new(7, 1))
     player1.add_figure(pawn2 = Pawn.new(2, 2))
     player1.add_figure(pawn3 = Pawn.new(2, 3))
     player1.add_figure(bishop1 = Bishop.new(2, 4))
@@ -15,6 +15,7 @@ RSpec.describe 'Table' do
     player1.add_figure(pawn8 = Pawn.new(2, 8))
     player1.add_figure(rook1 = Rook.new(1, 1))
     player1.add_figure(rook2 = Rook.new(1, 8))
+    player1.add_figure(knight1 = Knight.new(5, 3))
     player1.add_figure(queen1 = Queen.new(1, 4))
 
     player2.add_figure(pawn21 = Pawn.new(4, 1))
@@ -33,6 +34,30 @@ RSpec.describe 'Table' do
 
     player1.generate_table_of_range(table)
     player2.generate_table_of_range(table)
+
+    it 'knows initial pawn moves case 1' do
+      counter = 0
+      pawn5.table_of_range.squares.each {|line| line.each{ |square| counter += 1 if square == '++' } }
+      expect(counter).to eq (2)
+      expect(pawn5.table_of_range[3][5]).to eq('++')
+      expect(pawn5.table_of_range[4][5]).to eq('++')
+    end
+
+    it 'knows initial pawn moves case 2' do
+      counter = 0
+      pawn8.table_of_range.squares.each {|line| line.each{ |square| counter += 1 if square == '++' } }
+      expect(counter).to eq (0)
+      expect(pawn8.table_of_range[3][8]).to eq('--')
+      expect(pawn8.table_of_range[4][8]).to eq('--')
+    end
+
+    it 'knows initial pawn moves case 3' do
+      counter = 0
+      pawn23.table_of_range.squares.each {|line| line.each{ |square| counter += 1 if square == '++' } }
+      expect(counter).to eq (1)
+      expect(pawn23.table_of_range[6][3]).to eq('++')
+      expect(pawn23.table_of_range[5][3]).to eq('--')
+    end
 
     it 'has moved the pawn' do
       move(table, player1, player2, 2, 2, 4, 2)
@@ -94,7 +119,6 @@ RSpec.describe 'Table' do
       expect(pawn21.x).to eq(3)
       expect(pawn21.y).to eq(2)
       expect(player2.table_of_range[3][3]). to eq('!!')
-      player2.table_of_range.display
     end
 
     it 'eliminates en- passante the following turn' do
@@ -102,11 +126,29 @@ RSpec.describe 'Table' do
       expect(player2.table_of_range[3][3]). to_not eq('!!')
     end
 
-    it 'kills rook with bishop' do
+    it 'kills p2 rook with p1 bishop' do
       move(table, player1, player2, 2, 4, 4, 6)
       expect(table[2][4]).to eq('--')
       expect(table[4][6]).to eq(bishop1)
       expect(player2.figures.include? rook21).to eq(false)
+    end
+
+    it 'knows p2 knight moves' do
+      expect(knight21.table_of_range[3][3]).to eq('++')
+      expect(knight21.table_of_range[4][2]).to eq('++')
+      expect(knight21.table_of_range[6][2]).to eq('00')
+      expect(knight21.table_of_range[7][3]).to eq('00')
+      expect(knight21.table_of_range[7][5]).to eq('00')
+      expect(knight21.table_of_range[6][6]).to eq('++')
+      expect(knight21.table_of_range[4][6]).to eq('xx')
+      expect(knight21.table_of_range[3][5]).to eq('++')
+    end
+
+    it 'kills p1 bishop with p2 knight' do
+      move(table, player2, player1, 5, 4, 4, 6)
+      expect(table[5][4]).to eq('--')
+      expect(table[4][6]).to eq(knight21)
+      expect(player1.figures.include? bishop1).to eq(false)
       table.display
     end
   end

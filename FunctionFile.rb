@@ -13,6 +13,19 @@ def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNu
 
     if table[x][y].move(dx, dy, defender, table) == 1 then return 1 end
 
+    if table[dx][dy].class == Pawn && table[dx][dy].x == 4 + 4 * table[dx][dy].direction
+      puts 'Pawn has reached the end! What do you want to replace it with? The options are:'
+      puts "Rook => 'ro', Bishop => 'bi', Queen => 'qu', Knight => 'kn'"
+      newFig = gets.chomp
+      puts table[dx][dy].class
+      attacker.figures.delete(table[dx][dy])
+      puts table[dx][dy].class
+      nuFig = LEGIT_RESTORATION_FIGURES.key(newFig).new(dx, dy)
+      attacker.add_figure(nuFig)
+      table[dx][dy] = nuFig
+      puts table[dx][dy].class
+    end
+
     table = Table.new
 
     table.put_figures(attacker.figures)
@@ -34,6 +47,8 @@ def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNu
 
     defender.generate_table_of_range(table)
 
+    table[dx][dy].set_moves(table)
+
     defender.table_of_range[holderX][holderY] = '!!' if holderX != 0
 
     defender.figures.each do |figure|
@@ -41,6 +56,9 @@ def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNu
         figure.table_of_range[holderX][holderY] = '!!'
       end
     end
+
+    table.display
+
     return 0
 
   else
@@ -50,6 +68,7 @@ end
 
 def inspectFigure(table, attacker, x, y)
   if LEGIT_FIGURES[table[x][y].class] && table[x][y].player == attacker.id
+    puts table[x][y].class
     table[x][y].table_of_range.display
   else
     puts "This isn\'t player #{ attacker.id }\'s figure! Try again"
