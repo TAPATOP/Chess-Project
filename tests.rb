@@ -149,7 +149,20 @@ RSpec.describe 'Table' do
       expect(table[5][4]).to eq('--')
       expect(table[4][6]).to eq(knight21)
       expect(player1.figures.include? bishop1).to eq(false)
+    end
+
+    let(:gets) { String.new("qu\n") }
+
+    it 'knows replacement of a pawn' do
+      move(table, player1, player2, 7, 1, 8, 1)
+      expect(table[8][1].class).to eq(Queen)
       table.display
     end
+
+    #it 'knows replacement of a pawn 2' do
+    #  move(table, player2, player1, 2, 7, 1, 7)
+    #  expect(table[8][1].class).to eq(Queen)
+    #  table.display
+    #end
   end
 end
