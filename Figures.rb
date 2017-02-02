@@ -123,9 +123,6 @@ class Pawn < Figure
 
   def set_moves(table)
     @table_of_range = Table.new
-    if @player == 1 then @direction = 1
-    else @direction = -1
-    end
 
     if @x != 8 && x!= 1 # checks if pawn can move at all
 

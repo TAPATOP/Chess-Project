@@ -83,15 +83,17 @@ end
 
 def queenCastling(table, attacker, defender)
   kingX = attacker.king.x
-  if LEGIT_FIGURES[table[kingX][8].class] == 'ro' &&
+  if table[kingX][8].class == Rook &&
     attacker.king.has_moved == 0 &&
-     table[kingX][8].has_moved == 0 &&
-     defender.table_of_range[kingX][4] == '--' &&
-     defender.table_of_range[kingX][5] == '--' &&
-     defender.table_of_range[kingX][6] == '--' &&
-     table[kingX][5] == '--' &&
-     table[kingX][6] == '--' &&
-     table[kingX][7] == '--'
+    table[kingX][8].has_moved == 0 &&
+    defender.table_of_range[kingX][4] == '--' &&
+    defender.table_of_range[kingX][5] == '--' &&
+    defender.table_of_range[kingX][6] == '--' &&
+    table[kingX][5] == '--' &&
+    table[kingX][6] == '--' &&
+    table[kingX][7] == '--' &&
+    (table[kingX + attacker.direction][8].class != Pawn || table[kingX + attacker.direction][8].direction == attacker.direction) &&
+    (table[kingX + attacker.direction][4].class != Pawn || table[kingX + attacker.direction][4].direction == attacker.direction)
 
 
     move(table, attacker, defender, kingX, 8, kingX, 5)
@@ -107,21 +109,21 @@ end
 
 def kingCastling(table, attacker, defender)
   kingX = attacker.king.x
-  if LEGIT_FIGURES[table[kingX][1].class] == 'ro' &&
+  if table[kingX][1].class == Rook &&
     attacker.king.has_moved == 0 &&
     table[kingX][1].has_moved == 0 &&
     defender.table_of_range[kingX][4] == '--' &&
     defender.table_of_range[kingX][3] == '--' &&
     defender.table_of_range[kingX][2] == '--' &&
     table[kingX][3] == '--' &&
-    table[kingX][2] == '--'
+    table[kingX][2] == '--' &&
+    (table[kingX + attacker.direction][1].class != Pawn || table[kingX + attacker.direction][1].direction == attacker.direction) &&
+    (table[kingX + attacker.direction][4].class != Pawn || table[kingX + attacker.direction][4].direction == attacker.direction)
 
+    move(table, attacker, defender, kingX, 1, kingX, 3)
 
-    move(table, attacker, defender, kingX, 8, kingX, 5)
-
-    attacker.king.table_of_range[kingX][6] = '++'
-    move(table, attacker, defender, kingX, 4, kingX, 6)
-
+    attacker.king.table_of_range[kingX][2] = '++'
+    move(table, attacker, defender, kingX, 4, kingX, 2)
   else
     puts 'You can\'t castle queen- side'
     return 1

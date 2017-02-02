@@ -1,12 +1,17 @@
 class Player
   attr_accessor :figures
-  attr_accessor :table_of_range, :king
+  attr_accessor :table_of_range, :king, :direction
   attr_reader :id
 
   def initialize(id, x, y)
     @figures = Array.new(18)
     @table_of_range = Table.new
     @id = id
+    if @id == 1
+      @direction = 1
+    else
+      @direction = -1
+    end
     @king = King.new(x, y)
     add_figure(@king)
   end
@@ -17,6 +22,7 @@ class Player
       figure.player = @id
     else puts 'figure you\'re trying to add to player is out of base boundaries'
     end
+    if figure.class == Pawn then figure.direction = @direction end
   end
 
   def add_figures(figures)
