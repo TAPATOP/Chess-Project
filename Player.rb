@@ -1,12 +1,14 @@
 class Player
   attr_accessor :figures
-  attr_accessor :table_of_range
+  attr_accessor :table_of_range, :king
   attr_reader :id
 
-  def initialize(id)
+  def initialize(id, x, y)
     @figures = Array.new(18)
     @table_of_range = Table.new
     @id = id
+    @king = King.new(x, y)
+    add_figure(@king)
   end
 
   def add_figure(figure)

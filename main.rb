@@ -10,7 +10,7 @@ include DiagonalMoves
 
 def turn(table, attacker, defender)
   while(true) do
-    puts "Player #{attacker.id} turn. Choose command: move, inspect, display"
+    puts "Player #{attacker.id} turn. Choose command: move, inspect, display, castle"
     command = gets.chomp
 
     if command == 'move'
@@ -88,8 +88,29 @@ def turn(table, attacker, defender)
           displayTable(table)
           next
         else
-          puts 'Unrecognized command! Try again.'
-          next
+          if command == 'castle'
+            puts "Queenside castle or Kingside castle? 'qu' => Queenside, 'ki' => Kingside"
+            castleCommand = gets.chomp
+            if castleCommand == 'qu'
+              if queenCastling(table, attacker, defender) == 1 then next
+              else
+                break
+              end
+            else
+              if castleCommand == 'ki'
+                if kingCastling(table, attacker, defender) == 1 then next
+                else
+                  break
+                end
+              else
+                puts 'Error, try again.'
+                next
+              end
+            end
+          else
+            puts 'Unrecognized command! Try again.'
+            next
+          end
         end
       end
     end
@@ -97,8 +118,8 @@ def turn(table, attacker, defender)
 end
 
 table = Table.new
-player1 = Player.new(1)
-player2 = Player.new(2)
+player1 = Player.new(1, 1, 4)
+player2 = Player.new(2, 8, 4)
 
 
 player1.add_figure(pawn1 = Pawn.new(7, 1))
@@ -110,7 +131,7 @@ player1.add_figure(pawn7 = Pawn.new(2, 7))
 player1.add_figure(pawn8 = Pawn.new(2, 8))
 player1.add_figure(rook1 = Rook.new(1, 1))
 player1.add_figure(rook2 = Rook.new(1, 8))
-player1.add_figure(queen1 = Queen.new(1, 4))
+#player1.add_figure(queen1 = Queen.new(1, 5))
 
 player2.add_figure(pawn21 = Pawn.new(4, 1))
 player2.add_figure(pawn22 = Pawn.new(7, 2))
@@ -122,6 +143,8 @@ player2.add_figure(pawn27 = Pawn.new(7, 7))
 player2.add_figure(pawn28 = Pawn.new(3, 8))
 player2.add_figure(rook21 = Rook.new(4, 6))
 player2.add_figure(knight21 = Knight.new(5, 4))
+player2.add_figure(rook1 = Rook.new(8, 2))
+player2.add_figure(rook2 = Rook.new(8, 8))
 
 table.put_figures(player1.figures)
 table.put_figures(player2.figures)

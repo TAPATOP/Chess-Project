@@ -8,14 +8,15 @@ class Figure
     @x = x
     @y = y
     @table_of_range = Table.new
+    @has_moved = 0
   end
 
   def makeMove(x, y, defender, table)
     table[@x][@y] = '--'
     @x = x
     @y = y
+    @has_moved = 1
     table[x][y] = self
-    # @has_moved = 1
   end
 
   def move(x, y, defender, table)
@@ -103,12 +104,12 @@ class King < Figure
     [-1, 0, 1].each do |modifier1|
       [-1, 0, 1].each do |modifier2|
         if modifier1 != 0 || modifier2 !=0
-          if LEGIT_FIGURES[table[@x + modifier1][@y + modifier2].class]
+          if @x + modifier1 > 0 && @x + modifier1 < 9 && @y + modifier2 > 0 && @y + modifier2 < 9 && LEGIT_FIGURES[table[@x + modifier1][@y + modifier2].class]
             if table[@x + modifier1][@y + modifier2].player == player
               table_of_range[@x + modifier1][@y + modifier2] = '00'
             else table_of_range[@x + modifier1][@y + modifier2] = 'xx'
             end
-          else table_of_range[@x + modifier1][@y + modifier2] = '++' if table[@x + modifier1][@y + modifier2] == '--'
+          else table_of_range[@x + modifier1][@y + modifier2] = '++' if @x + modifier1 > 0 && @x + modifier1 < 9 && @y + modifier2 > 0 && @y + modifier2 < 9 && table[@x + modifier1][@y + modifier2] == '--'
           end
         end
       end
@@ -154,7 +155,7 @@ class Pawn < Figure
 
   def makeMove(x, y, defender, table)
   	originalX = @x
-  	if table_of_range[x][y] == '!!'# && (@x - x).abs == 1 && (@y - y).abs == 1
+  	if table_of_range[x][y] == '!!'
   	  puts "EN PASSANTE'D"
   	  table[@x][@y] = '--'
   	  @x = x
