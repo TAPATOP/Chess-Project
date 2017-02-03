@@ -321,7 +321,6 @@ RSpec.describe 'Table' do
     it 'castles king- side just normally' do
       move(table, player2, player1, 3, 3, 5, 2)
       kingCastling(table, player1, player2)
-      table.display
       expect(player1.king).to eq(table[1][2])
       expect(rook1).to eq(table[1][3])
     end
