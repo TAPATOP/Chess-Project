@@ -20,6 +20,15 @@ class Player
     if figure.x > 0 && figure.y > 0 && figure.x < 9 && figure.y < 9
       @figures.push(figure)
       figure.player = @id
+
+      stringHelper = String.new('./Images/')
+      if @id == 1
+        stringHelper = stringHelper + 'White'
+      else
+        stringHelper = stringHelper + 'Black'
+      end
+      stringHelper += figure.class.to_s + '.png'
+      figure.image = stringHelper
     else puts 'figure you\'re trying to add to player is out of base boundaries'
     end
     if figure.class == Pawn then figure.direction = @direction end

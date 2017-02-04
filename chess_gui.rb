@@ -1,6 +1,13 @@
+require './FunctionFile.rb'
+
+
 Shoes.app(width: 800, height: 800) do
   HASH_OF_COLORS = { 0 => black, 1 => white}
   @board = Array.new(8) { Array.new(8) }
+
+  @table = Table.new
+  @player1 = Player.new(1, 4, 1)
+  @player2 = Player.new(2, 4, 8)
 
   leftPadding = 100
   topPadding = 100
@@ -9,13 +16,32 @@ Shoes.app(width: 800, height: 800) do
   leftVal = leftPadding
   topVal = topPadding
 
-  color = 1
-  stack do
-    @box = para "watch here, fag"
-    @box2 = para "watch here too, fag"
-    @box3 = para "ye here too"
+  @standardGameButton = button "Standard Game plz"
+  @customGameButton = button "Custom shet"
+  @drawGameButton = button "Draw me plox"
+
+  @standardGameButton.click do
+    @table = Table.new
+    @player1 = Player.new(1, 4, 1)
+    @player2 = Player.new(2, 4, 8)
+    standardGame(@table, @player1, @player2)
   end
 
+  @customGameButton.click do
+    @table = Table.new
+    @player1 = Player.new(1, 4, 1)
+    @player2 = Player.new(2, 4, 8)
+    customGame(@table, @player1, @player2)
+  end
+
+  stack() do
+    @box = para "watch here, fag"
+    @box2 = para "watch here too, fag"
+    @box3 = para "ye here too. fag"
+  end
+
+
+  color = 1
   @board.each_index do |i|
     @board[i].each_index do |j|
       @board[i][j] = rect(left: leftVal, top: topVal, width: widthVal)
@@ -27,6 +53,27 @@ Shoes.app(width: 800, height: 800) do
     leftVal = leftPadding
   end
 
+  firstPosLeft, firstPosTop = 0, 0
+  secondPosLeft, secondPosTop = 0, 0
+
+  arrayofImages = Array.new
+
+  @drawGameButton.click do
+    arrayofImages.each { |elem| if elem.left then elem.remove end}
+    arrayofImages = Array.new
+    @table.squares.each_index do |i|
+      @table.squares[i + 1].each_index do |j|
+        if LEGIT_FIGURES[@table[i + 1][j + 1].class] != nil
+          someFigure = image("#{@table[i + 1][j + 1].image}")
+          someFigure.left = @board[i][j].left
+          someFigure.top = @board[i][j].top
+          someFigure.height = widthVal
+          someFigure.width = widthVal
+          arrayofImages.push(someFigure)
+        end
+      end
+    end
+  end
   click do |button, left, top|
     @board.each_index do |i|
       @board[i].each_index do |j|
@@ -34,10 +81,26 @@ Shoes.app(width: 800, height: 800) do
           top <= 8 * widthVal + topPadding && left <= 8 * widthVal + leftPadding &&
           left - @board[i][j].left <= widthVal && top - @board[i][j].top <= widthVal
 
-          @board[i][j].fill = red
           @box.replace "#{i + 1}, #{j + 1}"
-          @box2.replace "#{@board[i][j].left} #{@board[i][j].top}"
-          @box3.replace "#{left} #{top}"
+          if firstPosLeft == 0
+            firstPosLeft = i + 1
+            firstPosTop = j + 1
+            @box2.replace "#{firstPosLeft}, #{firstPosTop}"
+            @board[i][j].fill = red
+          else
+            secondPosLeft = i + 1
+            secondPosTop = j + 1
+            @box2.replace "#{firstPosLeft}, #{firstPosTop}"
+            @box3.replace "#{secondPosLeft}, #{secondPosTop}"
+
+            if (firstPosLeft + firstPosTop) % 2 == 1
+              @board[firstPosLeft - 1][firstPosTop - 1].fill = white
+            else
+              @board[firstPosLeft - 1][firstPosTop - 1].fill = black
+            end
+            firstPosLeft = 0
+            firstPosTop = 0
+          end
         end
       end
     end

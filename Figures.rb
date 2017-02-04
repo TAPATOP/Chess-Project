@@ -2,7 +2,7 @@
 
 # inherited by all figures, aka abstract class
 class Figure
-  attr_accessor :x, :y, :table_of_range, :player, :has_moved
+  attr_accessor :x, :y, :table_of_range, :player, :has_moved, :image
 
   def initialize(x, y)
     @x = x

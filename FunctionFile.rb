@@ -3,7 +3,6 @@ require './DiagonalMoves.rb' # it's a module
 require './Figures.rb'
 require './Table.rb'
 require './Player.rb'
-require './FunctionFile.rb'
 
 include StraightMoves
 include DiagonalMoves
@@ -70,7 +69,6 @@ end
 
 def inspectFigure(table, attacker, x, y)
   if LEGIT_FIGURES[table[x][y].class] && table[x][y].player == attacker.id
-    puts table[x][y].class
     table[x][y].table_of_range.display
   else
     puts "This isn\'t player #{ attacker.id }\'s figure! Try again"
@@ -128,4 +126,86 @@ def kingCastling(table, attacker, defender)
     puts 'You can\'t castle queen- side'
     return 1
   end
+end
+
+def customGame (table, player1, player2)
+  player1.king.x = 1
+  player1.king.y = 4
+  player2.king.x = 8
+  player2.king.y = 4
+
+  player1.add_figure(pawn1 = Pawn.new(7, 1))
+  player1.add_figure(pawn2 = Pawn.new(2, 2))
+  player1.add_figure(pawn3 = Pawn.new(2, 3))
+  player1.add_figure(bishop1 = Bishop.new(2, 4))
+  player1.add_figure(pawn6 = Pawn.new(2, 6))
+  player1.add_figure(pawn7 = Pawn.new(2, 7))
+  player1.add_figure(pawn8 = Pawn.new(2, 8))
+  player1.add_figure(rook1 = Rook.new(1, 1))
+  player1.add_figure(rook2 = Rook.new(1, 8))
+  #player1.add_figure(queen1 = Queen.new(1, 5))
+
+  player2.add_figure(pawn21 = Pawn.new(4, 1))
+  player2.add_figure(pawn22 = Pawn.new(7, 2))
+  player2.add_figure(pawn23 = Pawn.new(7, 3))
+  player2.add_figure(pawn24 = Pawn.new(7, 4))
+  player2.add_figure(pawn25 = Pawn.new(2, 5))
+  player2.add_figure(pawn26 = Pawn.new(3, 6))
+  player2.add_figure(pawn27 = Pawn.new(7, 7))
+  player2.add_figure(pawn28 = Pawn.new(3, 8))
+  player2.add_figure(rook21 = Rook.new(4, 6))
+  player2.add_figure(knight21 = Knight.new(5, 4))
+  player2.add_figure(rook1 = Rook.new(8, 2))
+  player2.add_figure(rook2 = Rook.new(8, 8))
+
+  table.put_figures(player1.figures)
+  table.put_figures(player2.figures)
+
+  player1.generate_table_of_range(table)
+  player2.generate_table_of_range(table)
+end
+
+def standardGame (table, player1, player2)
+  player1.king.x = 1
+  player1.king.y = 4
+  player2.king.x = 8
+  player2.king.y = 4
+
+  player1.add_figure(Pawn.new(2, 1))
+  player1.add_figure(Pawn.new(2, 2))
+  player1.add_figure(Pawn.new(2, 3))
+  player1.add_figure(Pawn.new(2, 4))
+  player1.add_figure(Pawn.new(2, 5))
+  player1.add_figure(Pawn.new(2, 6))
+  player1.add_figure(Pawn.new(2, 7))
+  player1.add_figure(Pawn.new(2, 8))
+  player1.add_figure(Rook.new(1, 1))
+  player1.add_figure(Rook.new(1, 8))
+  player1.add_figure(Knight.new(1, 2))
+  player1.add_figure(Knight.new(1, 7))
+  player1.add_figure(Bishop.new(1, 3))
+  player1.add_figure(Bishop.new(1, 6))
+  player1.add_figure(Queen.new(1, 5))
+
+  player2.add_figure(Pawn.new(7, 1))
+  player2.add_figure(Pawn.new(7, 2))
+  player2.add_figure(Pawn.new(7, 3))
+  player2.add_figure(Pawn.new(7, 4))
+  player2.add_figure(Pawn.new(7, 5))
+  player2.add_figure(Pawn.new(7, 6))
+  player2.add_figure(Pawn.new(7, 7))
+  player2.add_figure(Pawn.new(7, 8))
+  player2.add_figure(Rook.new(8, 1))
+  player2.add_figure(Rook.new(8, 8))
+  player2.add_figure(Knight.new(8, 2))
+  player2.add_figure(Knight.new(8, 7))
+  player2.add_figure(Bishop.new(8, 3))
+  player2.add_figure(Bishop.new(8, 6))
+  player2.add_figure(Queen.new(8, 5))
+
+  table.put_figures(player1.figures)
+  table.put_figures(player2.figures)
+
+  player1.generate_table_of_range(table)
+  player2.generate_table_of_range(table)
 end

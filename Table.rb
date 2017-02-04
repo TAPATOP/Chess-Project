@@ -1,4 +1,3 @@
-require 'colorize'
 # used for interface, as well as figure possible moves/ attacks
 class Table
   attr_accessor :squares
