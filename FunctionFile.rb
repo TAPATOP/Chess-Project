@@ -7,7 +7,7 @@ require './Player.rb'
 include StraightMoves
 include DiagonalMoves
 
-def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNum, FixNum, FixNum, FixNum
+def move(table, attacker, defender, x, y, dx, dy, newFig = 0) # Table, Player, Player, FixNum, FixNum, FixNum, FixNum
   if LEGIT_FIGURES[table[x][y].class] && table[x][y].player == attacker.id
 
     if table[x][y].move(dx, dy, defender, table) == 1 then return 1 end
@@ -17,7 +17,9 @@ def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNu
       attacker.figures.delete(table[dx][dy])
       while(true)
         puts "Rook => 'ro', Bishop => 'bi', Queen => 'qu', Knight => 'kn'" # reason for doublequotes is that i'm too lazy to escape all the singlequotes
-        newFig = gets.chomp
+
+        if newFig == 0 then newFig = gets.chomp end
+
         if LEGIT_RESTORATION_FIGURES.key(newFig) != nil # I have serious questions about this entire shit
           nuFig = LEGIT_RESTORATION_FIGURES.key(newFig).new(dx, dy)
           attacker.add_figure(nuFig)
@@ -59,11 +61,9 @@ def move(table, attacker, defender, x, y, dx, dy) # Table, Player, Player, FixNu
         figure.table_of_range[holderX][holderY] = '!!'
       end
     end
-
     return 0
-
   else
-    return 1
+  return 1
   end
 end
 

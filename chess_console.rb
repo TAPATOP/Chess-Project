@@ -122,7 +122,7 @@ table = Table.new
 player1 = Player.new(1, 1, 4)
 player2 = Player.new(2, 8, 4)
 
-standardGame(table, player1, player2)
+customGame(table, player1, player2)
 
 table.display
 
