@@ -17,13 +17,39 @@ def drawBoard
   end
 end
 
+def getBoardSquareCoordsByCoords(left, top)
+  @board.each_index do |i|
+    @board[i].each_index do |j|
+    if @board[i][j].left  - left <= 0 && @board[i][j].top - top <= 0 &&
+      top <= 8 * @widthVal + @topPadding && left <= 8 * @widthVal + @leftPadding &&
+      left - @board[i][j].left <= @widthVal && top - @board[i][j].top <= @widthVal
+
+      return [i, j]
+      end
+    end
+  end
+end
+
+def colorBoard
+  @board.each_index do |i|
+    @board[i].each_index do |j|
+      if (i + j) % 2 == 1
+        @board[i][j].fill = white
+      else
+        @board[i][j].fill = black
+      end
+    end
+  end
+end
+
 Shoes.app(width: 800, height: 800) do
-  HASH_OF_COLORS = { 0 => black, 1 => white}
+  HASH_OF_COLORS = { 0 => black, 1 => white }
   @board = Array.new(8) { Array.new(8) }
 
   @table = Table.new
   @player1 = Player.new(1, 4, 1)
   @player2 = Player.new(2, 4, 8)
+  @currentPlayer = 0
 
   @leftPadding = 100
   @topPadding = 100
@@ -75,56 +101,77 @@ Shoes.app(width: 800, height: 800) do
   @arrayofImages = Array.new
 
   @drawGameButton.click do
+    @currentPlayer = 0
     drawBoard
   end
 
-  @currentPlayer = 0
-
   click do |button, left, top|
-    @board.each_index do |i|
-      @board[i].each_index do |j|
-        if @board[i][j].left  - left <= 0 && @board[i][j].top - top <= 0 &&
-          top <= 8 * @widthVal + @topPadding && left <= 8 * @widthVal + @leftPadding &&
-          left - @board[i][j].left <= @widthVal && top - @board[i][j].top <= @widthVal
-
-          @box.replace "#{i + 1}, #{j + 1}"
-          if firstPosLeft == 0
-            firstPosLeft = i + 1
-            firstPosTop = j + 1
-            @box2.replace "#{firstPosLeft}, #{firstPosTop}"
-            @board[i][j].fill = red
-          else
-            secondPosLeft = i + 1
-            secondPosTop = j + 1
-            @box2.replace "#{firstPosLeft}, #{firstPosTop}"
-            @box3.replace "#{secondPosLeft}, #{secondPosTop}"
-
-            if @currentPlayer % 2 == 0
-              attacker = @player1
-              defender = @player2
-            else
-              attacker = @player2
-              defender = @player1
-            end
-
-            result = 0
-            result = move(@table, attacker, defender, firstPosLeft, firstPosTop, secondPosLeft, secondPosTop, 'qu')
-
-            if (firstPosLeft + firstPosTop) % 2 == 1
-              @board[firstPosLeft - 1][firstPosTop - 1].fill = white
-            else
-              @board[firstPosLeft - 1][firstPosTop - 1].fill = black
-            end
-            firstPosLeft = 0
-            firstPosTop = 0
-
-            if result == 0 then @currentPlayer = (@currentPlayer + 1) % 2 end
-
-            drawBoard
-
+    i, j = getBoardSquareCoordsByCoords(left, top)
+    @box.replace "#{i + 1}, #{j + 1}"
+    if firstPosLeft == 0
+      firstPosLeft = i + 1
+      firstPosTop = j + 1
+      @box2.replace "#{firstPosLeft}, #{firstPosTop}"
+      @board[i][j].fill = gold
+      @table[i + 1][j + 1].table_of_range.squares.each_index do |m|
+        @table[i + 1][j + 1].table_of_range.squares[m].each_index do |n|
+          case @table[i + 1][j + 1].table_of_range[m][n]
+            when '++'
+              @board[m - 1][n - 1].fill = green
+            when 'xx'
+              @board[m - 1][n - 1].fill = red
+            when '00'
+              @board[m - 1][n - 1].fill = blue
+            when '!!'
+              @board[m - 1][n - 1].fill = purple
           end
         end
       end
+    else
+      colorBoard
+
+      secondPosLeft = i + 1
+      secondPosTop = j + 1
+      @box2.replace "#{firstPosLeft}, #{firstPosTop}"
+      @box3.replace "#{secondPosLeft}, #{secondPosTop}"
+
+      if @currentPlayer % 2 == 0
+        attacker = @player1
+        defender = @player2
+      else
+        attacker = @player2
+        defender = @player1
+      end
+
+      result = 0
+      result = move(@table, attacker, defender, firstPosLeft, firstPosTop, secondPosLeft, secondPosTop, 'qu')
+
+      if (firstPosLeft + firstPosTop) % 2 == 1
+        @board[firstPosLeft - 1][firstPosTop - 1].fill = white
+      else
+        @board[firstPosLeft - 1][firstPosTop - 1].fill = black
+      end
+      firstPosLeft = 0
+      firstPosTop = 0
+
+      if result == 0 then @currentPlayer = (@currentPlayer + 1) % 2 end
+
+      result = 0
+
+      defender.figures.each do |fig|
+        if fig == defender.king
+          result = 1
+          break
+        end
+      end
+
+      if result == 0
+        @box.replace "PLAYER #{attacker.id} WINS!"
+        @box2.replace "PLAYER #{attacker.id} WINS!"
+        @box3.replace "PLAYER #{attacker.id} WINS!"
+      end
+
+      drawBoard
     end
   end
 end

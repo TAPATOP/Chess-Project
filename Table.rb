@@ -52,5 +52,6 @@ class Table
   def format_table
     @squares[0].each_index { |index| squares[0][index] = '0' + index.to_s }
     @squares.each_index { |index| squares[index][0] = '0' + index.to_s }
+    @squares[0][0] = '/0'
   end
 end
