@@ -123,7 +123,7 @@ def kingCastling(table, attacker, defender)
     attacker.king.table_of_range[kingX][2] = '++'
     move(table, attacker, defender, kingX, 4, kingX, 2)
   else
-    puts 'You can\'t castle queen- side'
+    puts 'You can\'t castle king- side'
     return 1
   end
 end

@@ -43,7 +43,8 @@ def colorBoard
 end
 
 Shoes.app(width: 800, height: 800) do
-  HASH_OF_COLORS = { 0 => black, 1 => white }
+  HASH_OF_COLORS = { 0 => white, 1 => black }
+  HASH_OF_COLORS2 = { 0 => black, 1 => white }
   @board = Array.new(8) { Array.new(8) }
 
   @table = Table.new
@@ -51,7 +52,7 @@ Shoes.app(width: 800, height: 800) do
   @player2 = Player.new(2, 4, 8)
   @currentPlayer = 0
 
-  @leftPadding = 100
+  @leftPadding = 200
   @topPadding = 100
   @widthVal = 50
 
@@ -61,6 +62,32 @@ Shoes.app(width: 800, height: 800) do
   @standardGameButton = button "Standard Game plz"
   @customGameButton = button "Custom shet"
   @drawGameButton = button "Draw me plox"
+  stack do
+    @queenCastlingButton = button "Queen- Side Castling"
+    @kingCastlingButton = button "King- Side Castling"
+  end
+
+  @queenCastlingButton.click do
+    if @currentPlayer == 0
+      if queenCastling(@table, @player1, @player2) != 1 then @currentPlayer = (@currentPlayer + 1) % 2 end
+    else
+      if queenCastling(@table, @player2, @player1) != 1 then @currentPlayer = (@currentPlayer + 1) % 2 end
+    end
+    puts @currentPlayer
+    drawBoard
+  end
+
+  @kingCastlingButton.click do
+    if @currentPlayer == 0
+      if kingCastling(@table, @player1, @player2) != 1 then @currentPlayer = (@currentPlayer + 1) % 2 end
+    else
+      if kingCastling(@table, @player2, @player1) != 1 then @currentPlayer = (@currentPlayer + 1) % 2 end
+    end
+    puts @currentPlayer
+    drawBoard
+  end
+
+  @arrayofImages = Array.new
 
   @standardGameButton.click do
     @table = Table.new
@@ -77,13 +104,12 @@ Shoes.app(width: 800, height: 800) do
   end
 
   stack() do
-    @box = para "watch here, fag"
-    @box2 = para "watch here too, fag"
-    @box3 = para "ye here too. fag"
+    @box = para "i j"
+    @box2 = para "i j"
+    @box3 = para "i j"
   end
 
-
-  color = 1
+  color = 0
   @board.each_index do |i|
     @board[i].each_index do |j|
       @board[i][j] = rect(left: leftVal, top: topVal, width: @widthVal)
@@ -95,10 +121,16 @@ Shoes.app(width: 800, height: 800) do
     leftVal = @leftPadding
   end
 
-  firstPosLeft, firstPosTop = 0, 0
-  secondPosLeft, secondPosTop = 0, 0
+  @shape = star(points: 5, outer: 20, inner: 10)
 
-  @arrayofImages = Array.new
+    motion do |left, top|
+    @shape.move left, top
+    @shape.fill = HASH_OF_COLORS[@currentPlayer]
+    @shape.stroke = HASH_OF_COLORS2[@currentPlayer]
+  end
+
+  firstPosLeft, firstPosTop = 0, 0
+  secondPosLeft, secondPosLeftndPosTop = 0, 0
 
   @drawGameButton.click do
     @currentPlayer = 0
@@ -145,6 +177,7 @@ Shoes.app(width: 800, height: 800) do
 
       result = 0
       result = move(@table, attacker, defender, firstPosLeft, firstPosTop, secondPosLeft, secondPosTop, 'qu')
+      puts @currentPlayer
 
       if (firstPosLeft + firstPosTop) % 2 == 1
         @board[firstPosLeft - 1][firstPosTop - 1].fill = white
