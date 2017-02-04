@@ -42,7 +42,7 @@ def colorBoard
   end
 end
 
-Shoes.app(width: 800, height: 800) do
+Shoes.app(width: 800, height: 800, title: "ebin spurdo sparde simulator") do
   HASH_OF_COLORS = { 0 => white, 1 => black }
   HASH_OF_COLORS2 = { 0 => black, 1 => white }
   @board = Array.new(8) { Array.new(8) }
@@ -59,9 +59,11 @@ Shoes.app(width: 800, height: 800) do
   leftVal = @leftPadding
   topVal = @topPadding
 
-  @standardGameButton = button "Standard Game plz"
-  @customGameButton = button "Custom shet"
-  @drawGameButton = button "Draw me plox"
+  flow do
+    @standardGameButton = button "Standard Game plz"
+    @customGameButton = button "Custom shet"
+    @drawGameButton = button "Draw me plox"
+  end
   stack do
     @queenCastlingButton = button "Queen- Side Castling"
     @kingCastlingButton = button "King- Side Castling"
@@ -73,7 +75,6 @@ Shoes.app(width: 800, height: 800) do
     else
       if queenCastling(@table, @player2, @player1) != 1 then @currentPlayer = (@currentPlayer + 1) % 2 end
     end
-    puts @currentPlayer
     drawBoard
   end
 
