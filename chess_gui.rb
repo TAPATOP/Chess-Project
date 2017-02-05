@@ -81,7 +81,17 @@ Shoes.app(width: 800, height: 800, title: @title) do
         @saveName.replace "SAVED!"
         manualSave(@gameName.text, @saveNameDefiningField.text, @attacker, @defender)
       else
-        @saveName.text replace "Fields not properly filled"
+        @saveName.replace "Fields not properly filled"
+        popup = window(width: 200, height: 200) do
+        stack do
+          style(:margin_left => '50%', :left => '-25%', :align => "center")
+          para "please insert a game name"
+          ok = button "OK"
+          ok.click do
+            popup.close
+          end
+        end
+      end
       end
     end
   end
@@ -158,6 +168,16 @@ Shoes.app(width: 800, height: 800, title: @title) do
       @gameName.replace @gameNameDefiningField.text
       drawBoard
     else
+      popup = window(width: 200, height: 200) do
+        stack do
+          style(:margin_left => '50%', :left => '-25%', :align => "center")
+          para "please insert a game name"
+          ok = button "OK"
+          ok.click do
+            popup.close
+          end
+        end
+      end
       @gameName.replace "please insert a game name"
     end
   end
