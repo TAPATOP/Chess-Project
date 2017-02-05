@@ -264,5 +264,49 @@ def autosave(gameName, attacker, defender, autosaveID)
   autosaveID += 1
 end
 
-def readFromFile(fileName, player1, player2)
+def loadGame(gameName, saveName, table, player1, player2)
+  something = String.new
+  input = File.new("./Games/#{gameName}/#{saveName}")
+
+  while something = input.gets do
+    if something.include?('Player')
+      if something[7].to_i == 1
+        readingPart(player1, input)
+      else readingPart(player2, input)
+      end
+    end
+  end
+  table.put_figures(player1.figures)
+  table.put_figures(player2.figures)
+
+
+  player1.generate_table_of_range(table)
+  player2.generate_table_of_range(table)
+end
+
+def readingPart(player, input)
+  while something = input.gets do
+    clas, x, y, has_moved = something.split(' ')
+
+    if LEGIT_STRING_FIGURES[clas] != nil
+      if LEGIT_STRING_FIGURES[clas] == King
+        player.king.x = x.to_i
+        player.king.y = y.to_i
+        player.king.has_moved = has_moved
+      else
+        newFig = LEGIT_STRING_FIGURES[clas].new(x.to_i, y.to_i)
+        newFig.has_moved = has_moved.to_i
+        player.add_figure(newFig)
+      end
+    else
+      if clas == 'end' || clas == 'next'
+        puts "enough is enough"
+        break
+      else
+        if clas == 'enpas'
+          player.table_of_range[x.to_i][y.to_i] = '!!'
+        end
+      end
+    end
+  end
 end

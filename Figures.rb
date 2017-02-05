@@ -174,3 +174,4 @@ end
 
 LEGIT_FIGURES = { Rook => 'ro', Bishop => 'bi', Queen => 'qu', Knight => 'kn', King => 'ki', Pawn => 'pa' }
 LEGIT_RESTORATION_FIGURES = { Rook => 'ro', Bishop => 'bi', Queen => 'qu', Knight => 'kn' }
+LEGIT_STRING_FIGURES = { 'Rook' => Rook, 'Bishop' => Bishop, 'Queen' => Queen, 'Knight' => Knight, 'King' => King, 'Pawn' => Pawn }
