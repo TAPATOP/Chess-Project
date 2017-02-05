@@ -42,7 +42,9 @@ def colorBoard
   end
 end
 
-Shoes.app(width: 800, height: 800, title: "ebin spurdo sparde simulator") do
+@title = "Itso's Almost Working Chess"
+
+Shoes.app(width: 800, height: 800, title: @title) do
   HASH_OF_COLORS = { 0 => white, 1 => black }
   HASH_OF_COLORS2 = { 0 => black, 1 => white }
   @board = Array.new(8) { Array.new(8) }
@@ -51,19 +53,45 @@ Shoes.app(width: 800, height: 800, title: "ebin spurdo sparde simulator") do
   @player1 = Player.new(1, 4, 1)
   @player2 = Player.new(2, 4, 8)
   @currentPlayer = 0
+  @autosaveID = 1
+
+  @attacker
+  @defender
 
   @leftPadding = 200
-  @topPadding = 100
+  @topPadding = 150
   @widthVal = 50
 
   leftVal = @leftPadding
   topVal = @topPadding
+
+  stack do
+    flow do
+      @gameNameDefiningField = edit_line
+      @gameName = para "game name goes here"
+    end
+    flow do
+      @saveNameDefiningField = edit_line
+      @saveName = para "save name goes here"
+    end
+
+    @manualSaveButton = button "Save"
+    @manualSaveButton.click do
+      if @saveNameDefiningField.text != "" && @gameNameDefiningField != ""
+        @saveName.replace "SAVED!"
+        manualSave(@gameName.text, @saveNameDefiningField.text, @attacker, @defender)
+      else
+        @saveName.text replace "Fields not properly filled"
+      end
+    end
+  end
 
   flow do
     @standardGameButton = button "Standard Game plz"
     @customGameButton = button "Custom shet"
     @drawGameButton = button "Draw me plox"
   end
+
   stack do
     @queenCastlingButton = button "Queen- Side Castling"
     @kingCastlingButton = button "King- Side Castling"
@@ -122,6 +150,18 @@ Shoes.app(width: 800, height: 800, title: "ebin spurdo sparde simulator") do
     leftVal = @leftPadding
   end
 
+  @drawGameButton.click do
+    @currentPlayer = 0 # this should be relocated
+
+    if @gameNameDefiningField.text != ""
+      @autosaveID = 0
+      @gameName.replace @gameNameDefiningField.text
+      drawBoard
+    else
+      @gameName.replace "please insert a game name"
+    end
+  end
+
   @shape = star(points: 5, outer: 20, inner: 10)
 
     motion do |left, top|
@@ -132,11 +172,6 @@ Shoes.app(width: 800, height: 800, title: "ebin spurdo sparde simulator") do
 
   firstPosLeft, firstPosTop = 0, 0
   secondPosLeft, secondPosLeftndPosTop = 0, 0
-
-  @drawGameButton.click do
-    @currentPlayer = 0
-    drawBoard
-  end
 
   click do |button, left, top|
     i, j = getBoardSquareCoordsByCoords(left, top)
@@ -169,15 +204,15 @@ Shoes.app(width: 800, height: 800, title: "ebin spurdo sparde simulator") do
       @box3.replace "#{secondPosLeft}, #{secondPosTop}"
 
       if @currentPlayer % 2 == 0
-        attacker = @player1
-        defender = @player2
+        @attacker = @player1
+        @defender = @player2
       else
-        attacker = @player2
-        defender = @player1
+        @attacker = @player2
+        @defender = @player1
       end
 
       result = 0
-      result = move(@table, attacker, defender, firstPosLeft, firstPosTop, secondPosLeft, secondPosTop, 'qu')
+      result = move(@table, @attacker, @defender, firstPosLeft, firstPosTop, secondPosLeft, secondPosTop, 'qu')
 
       if (firstPosLeft + firstPosTop) % 2 == 1
         @board[firstPosLeft - 1][firstPosTop - 1].fill = white
@@ -187,21 +222,24 @@ Shoes.app(width: 800, height: 800, title: "ebin spurdo sparde simulator") do
       firstPosLeft = 0
       firstPosTop = 0
 
-      if result == 0 then @currentPlayer = (@currentPlayer + 1) % 2 end
+      if result == 0
+        @currentPlayer = (@currentPlayer + 1) % 2
+        @autosaveID = autosave(@gameName.text, @attacker, @defender, @autosaveID)
+      end
 
       result = 0
 
-      defender.figures.each do |fig|
-        if fig == defender.king
+      @defender.figures.each do |fig|
+        if fig == @defender.king
           result = 1
           break
         end
       end
 
       if result == 0
-        @box.replace "PLAYER #{attacker.id} WINS!"
-        @box2.replace "PLAYER #{attacker.id} WINS!"
-        @box3.replace "PLAYER #{attacker.id} WINS!"
+        @box.replace "PLAYER #{@attacker.id} WINS!"
+        @box2.replace "PLAYER #{@attacker.id} WINS!"
+        @box3.replace "PLAYER #{@attacker.id} WINS!"
       end
 
       drawBoard

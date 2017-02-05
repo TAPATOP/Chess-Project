@@ -214,6 +214,7 @@ end
 
 def manualSave(saveDir, saveName, attacker, defender)
   directory_name = "Games"
+
   Dir.mkdir(directory_name) unless File.exists?(directory_name)
   directory_name += '/' + saveDir.to_s
   Dir.mkdir(directory_name) unless File.exists?(directory_name)
