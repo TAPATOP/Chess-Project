@@ -11,7 +11,7 @@ include DiagonalMoves
 
 def turn(table, attacker, defender)
   while(true) do
-    puts "Player #{attacker.id} turn. Choose command: move, inspect, display, castle"
+    puts "Player #{attacker.id} turn. Choose command: move, inspect, display, castle, save"
     command = gets.chomp
 
     if command == 'move'
@@ -109,7 +109,14 @@ def turn(table, attacker, defender)
               end
             end
           else
-            puts 'Unrecognized command! Try again.'
+            if command == 'save'
+              puts 'Input Game Name'
+              saveName = gets.chomp
+              writeToFile(saveName, attacker, defender)
+              next
+            else
+              puts 'Unrecognized command! Try again.'
+            end
             next
           end
         end
@@ -122,11 +129,23 @@ table = Table.new
 player1 = Player.new(1, 1, 4)
 player2 = Player.new(2, 8, 4)
 
-customGame(table, player1, player2)
 
 table.display
 
 while(true) do
+  puts 'helo dis is ebin chezz. chus: Standard game(st), Custom game(cu) or Load game(load)'
+  gameType = gets.chomp
+
+  case gameType
+  when 'st'
+    standardGame(table, player1, player2)
+  when 'cu'
+    customGame(table, player1, player2)
+  when 'load'
+    puts 'pls say game file name for loading'
+    gameName = gets.chomp
+    readFromFile(gameName, player1, player2)
+  end
   turn(table, player1, player2)
   turn(table, player2, player1)
 end

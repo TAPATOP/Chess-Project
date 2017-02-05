@@ -135,6 +135,7 @@ def customGame (table, player1, player2)
   player2.king.y = 4
 
   player1.add_figure(pawn1 = Pawn.new(7, 1))
+  pawn1.has_moved = 1
   player1.add_figure(pawn2 = Pawn.new(2, 2))
   player1.add_figure(pawn3 = Pawn.new(2, 3))
   player1.add_figure(bishop1 = Bishop.new(2, 4))
@@ -208,4 +209,39 @@ def standardGame (table, player1, player2)
 
   player1.generate_table_of_range(table)
   player2.generate_table_of_range(table)
+end
+
+def writeToFile(saveName, attacker, defender)
+  directory_name = "Games"
+  Dir.mkdir(directory_name) unless File.exists?(directory_name)
+  directory_name += '/' + saveName.to_s
+  Dir.mkdir(directory_name) unless File.exists?(directory_name)
+
+  final_destination = directory_name + '/' + saveName + '.txt'
+
+  dataToBeSaved = String.new("")
+
+  dataToBeSaved = savingFunct(dataToBeSaved, attacker)
+  dataToBeSaved += "next \n"
+  dataToBeSaved = savingFunct(dataToBeSaved, attacker)
+  dataToBeSaved += "end \n"
+
+  File.open(final_destination, 'w') { |f| f.write(dataToBeSaved) }
+
+  #IO.write(final_destination, 'hi')
+  # File.open("out.txt", '<OPTION>') {|f| f.write("write your stuff here") }
+end
+
+def savingFunct(dataToBeSaved, attacker)
+  dataToBeSaved += "#{attacker.id} \n"
+
+  attacker.figures.each do |fig|
+    dataToBeSaved += "#{fig.class} #{fig.x} #{fig.y} #{fig.has_moved} \n" if fig.class != NilClass
+  end
+
+  dataToBeSaved += attacker.table_of_range.squares.to_s
+  dataToBeSaved += "\n"
+end
+
+def readFromFile(fileName, player1, player2)
 end
