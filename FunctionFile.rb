@@ -223,7 +223,7 @@ def writeToFile(saveName, attacker, defender)
 
   dataToBeSaved = savingFunct(dataToBeSaved, attacker)
   dataToBeSaved += "next \n"
-  dataToBeSaved = savingFunct(dataToBeSaved, attacker)
+  dataToBeSaved = savingFunct(dataToBeSaved, defender)
   dataToBeSaved += "end \n"
 
   File.open(final_destination, 'w') { |f| f.write(dataToBeSaved) }
@@ -232,15 +232,29 @@ def writeToFile(saveName, attacker, defender)
   # File.open("out.txt", '<OPTION>') {|f| f.write("write your stuff here") }
 end
 
-def savingFunct(dataToBeSaved, attacker)
-  dataToBeSaved += "#{attacker.id} \n"
+def savingFunct(dataToBeSaved, player)
+  dataToBeSaved += "#{player.id} \n"
 
-  attacker.figures.each do |fig|
+  player.figures.each do |fig|
     dataToBeSaved += "#{fig.class} #{fig.x} #{fig.y} #{fig.has_moved} \n" if fig.class != NilClass
   end
 
-  dataToBeSaved += attacker.table_of_range.squares.to_s
-  dataToBeSaved += "\n"
+  holderX = 0
+  holderY = 0
+
+  player.table_of_range.squares.each_index do |i|
+    player.table_of_range.squares[i].each_index do |j|
+      if player.table_of_range[i][j].class != NilClass && player.table_of_range[i][j] == '!!'
+        holderY = j
+        holderX = i
+        break
+      end
+    end
+  end
+
+  if holderX != 0 then dataToBeSaved += "enpas #{holderX} #{holderY} \n" end
+
+  dataToBeSaved
 end
 
 def readFromFile(fileName, player1, player2)

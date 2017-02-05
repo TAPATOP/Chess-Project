@@ -146,6 +146,9 @@ while(true) do
     gameName = gets.chomp
     readFromFile(gameName, player1, player2)
   end
-  turn(table, player1, player2)
-  turn(table, player2, player1)
+  while(true)
+    table.display
+    turn(table, player1, player2)
+    turn(table, player2, player1)
+  end
 end
