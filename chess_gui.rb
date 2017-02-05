@@ -178,7 +178,6 @@ Shoes.app(width: 800, height: 800, title: "ebin spurdo sparde simulator") do
 
       result = 0
       result = move(@table, attacker, defender, firstPosLeft, firstPosTop, secondPosLeft, secondPosTop, 'qu')
-      puts @currentPlayer
 
       if (firstPosLeft + firstPosTop) % 2 == 1
         @board[firstPosLeft - 1][firstPosTop - 1].fill = white

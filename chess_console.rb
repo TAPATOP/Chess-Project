@@ -9,7 +9,7 @@ require 'colorize'
 include StraightMoves
 include DiagonalMoves
 
-def turn(table, attacker, defender)
+def turn(gameName, table, attacker, defender)
   while(true) do
     puts "Player #{attacker.id} turn. Choose command: move, inspect, display, castle, save"
     command = gets.chomp
@@ -62,6 +62,7 @@ def turn(table, attacker, defender)
         table.put_figures(defender.figures)
 
         table.display
+        @autosaveID = autosave(gameName, attacker, defender, @autosaveID)
       end
       break
     else
@@ -112,7 +113,7 @@ def turn(table, attacker, defender)
             if command == 'save'
               puts 'Input Game Name'
               saveName = gets.chomp
-              writeToFile(saveName, attacker, defender)
+              manualSave(gameName, saveName, attacker, defender)
               next
             else
               puts 'Unrecognized command! Try again.'
@@ -133,13 +134,18 @@ player2 = Player.new(2, 8, 4)
 table.display
 
 while(true) do
+  @autosaveID = 0
   puts 'helo dis is ebin chezz. chus: Standard game(st), Custom game(cu) or Load game(load)'
   gameType = gets.chomp
 
   case gameType
   when 'st'
+    puts 'pls gib the game a name so u can undo'
+    gameName = gets.chomp
     standardGame(table, player1, player2)
   when 'cu'
+    puts 'pls gib the game a name so u can undo'
+    gameName = gets.chomp
     customGame(table, player1, player2)
   when 'load'
     puts 'pls say game file name for loading'
@@ -148,7 +154,7 @@ while(true) do
   end
   while(true)
     table.display
-    turn(table, player1, player2)
-    turn(table, player2, player1)
+    turn(gameName, table, player1, player2)
+    turn(gameName, table, player2, player1)
   end
 end

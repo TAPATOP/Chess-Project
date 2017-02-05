@@ -61,6 +61,7 @@ def move(table, attacker, defender, x, y, dx, dy, newFig = 0) # Table, Player, P
         figure.table_of_range[holderX][holderY] = '!!'
       end
     end
+    # autosave(gameName, attacker, defender)
     return 0
   else
   return 1
@@ -211,10 +212,10 @@ def standardGame (table, player1, player2)
   player2.generate_table_of_range(table)
 end
 
-def writeToFile(saveName, attacker, defender)
+def manualSave(saveDir, saveName, attacker, defender)
   directory_name = "Games"
   Dir.mkdir(directory_name) unless File.exists?(directory_name)
-  directory_name += '/' + saveName.to_s
+  directory_name += '/' + saveDir.to_s
   Dir.mkdir(directory_name) unless File.exists?(directory_name)
 
   final_destination = directory_name + '/' + saveName + '.txt'
@@ -233,7 +234,7 @@ def writeToFile(saveName, attacker, defender)
 end
 
 def savingFunct(dataToBeSaved, player)
-  dataToBeSaved += "#{player.id} \n"
+  dataToBeSaved += "Player #{player.id} \n"
 
   player.figures.each do |fig|
     dataToBeSaved += "#{fig.class} #{fig.x} #{fig.y} #{fig.has_moved} \n" if fig.class != NilClass
@@ -255,6 +256,11 @@ def savingFunct(dataToBeSaved, player)
   if holderX != 0 then dataToBeSaved += "enpas #{holderX} #{holderY} \n" end
 
   dataToBeSaved
+end
+
+def autosave(gameName, attacker, defender, autosaveID)
+  manualSave(gameName, autosaveID.to_s, attacker, defender)
+  autosaveID += 1
 end
 
 def readFromFile(fileName, player1, player2)
