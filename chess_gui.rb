@@ -118,9 +118,9 @@ Shoes.app(width: 800, height: 800, title: @title) do
       end
       @undoButton = button 'Undo'
       @undoButton.click do
-        @autosaveID -= 1
         puts "reloading turn #{@autosaveID}"
-        @currentPlayer = loadGame(@gameName.text, @autosaveID.to_s, @table, @player1, @player2)
+        @currentPlayer = loadGame(@gameName.text, (@autosaveID - 2).to_s, @table, @player1, @player2)
+        @autosaveID -= 1
         drawBoard
       end
     end
