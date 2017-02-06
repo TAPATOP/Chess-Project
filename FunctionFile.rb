@@ -264,9 +264,10 @@ def autosave(gameName, attacker, defender, autosaveID)
   autosaveID += 1
 end
 
-def loadGame(gameName, saveName, table, player1, player2)
+def loadGame(gameName, saveName, table, player1, player2, currPlayer)
   something = String.new
   input = File.new("./Games/#{gameName}/#{saveName}")
+  currPlayer = 0
 
   while something = input.gets do
     if something.include?('Player')
@@ -274,14 +275,16 @@ def loadGame(gameName, saveName, table, player1, player2)
         readingPart(player1, input)
       else readingPart(player2, input)
       end
+      currPlayer  = something[7].to_i if currPlayer  == 0
     end
   end
   table.put_figures(player1.figures)
   table.put_figures(player2.figures)
 
-
   player1.generate_table_of_range(table)
   player2.generate_table_of_range(table)
+
+  currPlayer
 end
 
 def readingPart(player, input)

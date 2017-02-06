@@ -132,12 +132,13 @@ player2 = Player.new(2, 8, 4)
 currentPlayer = 1
 
 table.display
-
+puts
+puts 'helo dis is ebin chezz'
 while(true) do
   @autosaveID = 0
-  puts 'helo dis is ebin chezz. chus: Standard game(st), Custom game(cu) or Load game(load)'
-  #gameType = gets.chomp
-  gameType = 'load'
+  puts 'chus: Standard game(st), Custom game(cu) or Load game(load)'
+  gameType = gets.chomp
+  # gameType = 'load'
 
   case gameType
   when 'st'
@@ -149,11 +150,16 @@ while(true) do
     gameName = gets.chomp
     customGame(table, player1, player2)
   when 'load'
-    puts 'pls say game(folder) name and save(file) name for loading'
-    #gameName = gets.chomp
-    gameName = 'custom game'
-    saveName = 'firstsave.txt'
-    loadGame(gameName, saveName, table, player1, player2)
+    puts 'pls say game(folder) name for loading'
+    gameName = gets.chomp
+    # gameName = 'custom game'
+    puts 'plas say save(file) name for loading( do not include \'.txt\')'
+    saveName = gets.chomp
+    saveName += '.txt'
+    currentPlayer = loadGame(gameName, saveName, table, player1, player2, currentPlayer)
+  else
+    puts 'looks like you didnt input a correct type of a game'
+    next
   end
   while(true)
     player1.table_of_range.display
