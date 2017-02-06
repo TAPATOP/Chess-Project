@@ -266,21 +266,36 @@ Shoes.app(width: 800, height: 800, title: @title) do
       firstPosLeft = 0
       firstPosTop = 0
 
-      if result == 0
+      if result == 2
+        loadGame(@gameName, (@autosaveID - 1).to_s, @table, @defender, @attacker)
+
+        popup = window(width: 200, height: 200) do
+          para "If you do that your king will be in check"
+        end
+      end
+
+      if result == 0 || result == -1
         @currentPlayer = (@currentPlayer + 1) % 2
         @autosaveID = autosave(@gameName.text, @attacker, @defender, @autosaveID)
       end
 
-      result = 0
+      if result == -1
+        popup = window do
+          para "YOU'RE UNDER CHESS"
+          background.fill red
+        end
+      end
+
+      result2 = 0
 
       @defender.figures.each do |fig|
         if fig == @defender.king
-          result = 1
+          result2 = 1
           break
         end
       end
 
-      if result == 0
+      if result2 == 0
         @box.replace "PLAYER #{@attacker.id} WINS!"
         @box2.replace "PLAYER #{@attacker.id} WINS!"
         @box3.replace "PLAYER #{@attacker.id} WINS!"

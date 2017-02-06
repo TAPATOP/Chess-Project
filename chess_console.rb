@@ -69,7 +69,10 @@ def turn(gameName, table, attacker, defender)
           table.put_figures(defender.figures)
 
           table.display
+          puts
           @autosaveID = autosave(gameName, attacker, defender, @autosaveID)
+
+          puts 'Watch out, you\'re under chess!' if result == -1
         end
       end
       break

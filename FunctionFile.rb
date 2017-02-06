@@ -68,6 +68,8 @@ def move(table, attacker, defender, x, y, dx, dy, newFig = 0) # Table, Player, P
     end
 
     autosave(@gameName, attacker, defender, @autosaveID)
+    return -1 if attacker.table_of_range[defender.king.x][defender.king.y] == 'xx'
+
     return 0
   else
   return 1
