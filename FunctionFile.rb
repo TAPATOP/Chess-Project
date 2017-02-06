@@ -284,7 +284,7 @@ def loadGame(gameName, saveName, table, player1, player2) # keep in mind this fu
 
     while something = input.gets do
       if something.include?('Player')
-        if something[7].to_i == 1
+        if something[7].to_i == player1.id
           readingPart(player1, input)
         else
           readingPart(player2, input)
