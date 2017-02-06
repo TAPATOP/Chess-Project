@@ -152,19 +152,19 @@ while(true) do
   case gameType
   when 'st'
     puts 'pls gib the game a name so u can undo'
-    gameName = gets.chomp
+    @gameName = gets.chomp
     standardGame(table, player1, player2)
   when 'cu'
     puts 'pls gib the game a name so u can undo'
-    gameName = gets.chomp
+    @gameName = gets.chomp
     customGame(table, player1, player2)
   when 'load'
     puts 'pls say game(folder) name for loading'
-    gameName = gets.chomp
+    @gameName = gets.chomp
     # gameName = 'custom game'
     puts 'plas say save(file) name for loading( do not include \'.txt\')'
     saveName = gets.chomp
-    currentPlayer = loadGame(gameName, saveName, table, player1, player2)
+    currentPlayer = loadGame(@gameName, saveName, table, player1, player2)
     next if currentPlayer == 0
   else
     puts 'looks like you didnt input a correct type of a game'
@@ -177,8 +177,16 @@ while(true) do
     if currentPlayer == 2
       currentPlayer = 1
     else
-      turn(gameName, table, player1, player2)
+      turn(@gameName, table, player1, player2)
+      if isGameOver(table, player1, player2) == 1
+        puts "Player 1 Wins!"
+        break
+      end
     end
-    turn(gameName, table, player2, player1)
+    turn(@gameName, table, player2, player1)
+    if isGameOver(table, player2, player1) == 1
+        puts "Player 2 Wins!"
+        break
+      end
   end
 end

@@ -61,6 +61,15 @@ def move(table, attacker, defender, x, y, dx, dy, newFig = 0) # Table, Player, P
         figure.table_of_range[holderX][holderY] = '!!'
       end
     end
+
+    #if defender.table_of_range[attacker.king.x][attacker.king.y] == 'xx'
+    #  puts 'Dude, if you did this you\'d be in chess'
+    #  loadGame(@gameName, (@autosaveID - 2).to_s, table, defender, attacker) != 0
+    #  @autosaveID -= 1
+    #  table.display
+    #  return 1
+    #end
+
     # autosave(gameName, attacker, defender)
     return 0
   else
@@ -130,6 +139,8 @@ def kingCastling(table, attacker, defender)
 end
 
 def customGame (table, player1, player2)
+  resetGame(table, player1, player2)
+
   player1.king.x = 1
   player1.king.y = 4
   player2.king.x = 8
@@ -168,6 +179,8 @@ def customGame (table, player1, player2)
 end
 
 def standardGame (table, player1, player2)
+  resetGame(table, player1, player2)
+
   player1.king.x = 1
   player1.king.y = 4
   player2.king.x = 8
@@ -264,23 +277,26 @@ def autosave(gameName, attacker, defender, autosaveID)
   autosaveID += 1
 end
 
+def resetGame(table, player1, player2)
+  player1.figures = Array.new
+  player1.add_figure(player1.king)
+
+  player2.figures = Array.new
+  player2.add_figure(player2.king)
+
+  table.squares.each_index do |i|
+    table.squares[i].each_index do |j|
+      table.squares[i] = Array.new(9,'--')
+    end
+  end
+end
 def loadGame(gameName, saveName, table, player1, player2) # keep in mind this function returns the next player turn
   something = String.new
   if File.exists?"./Games/#{gameName}/#{saveName}.txt"
     input = File.new("./Games/#{gameName}/#{saveName}.txt")
     currPlayer = 0
 
-    player1.figures = Array.new
-    player1.add_figure(player1.king)
-
-    player2.figures = Array.new
-    player2.add_figure(player2.king)
-
-    table.squares.each_index do |i|
-      table.squares[i].each_index do |j|
-        table.squares[i] = Array.new(9,'--')
-      end
-    end
+    resetGame(table, player1, player2)
 
     while something = input.gets do
       if something.include?('Player')
@@ -330,4 +346,9 @@ def readingPart(player, input)
       end
     end
   end
+end
+
+def isGameOver(table, attacker, defender)
+  defender.figures.each { |fig| return 0 if defender.king == fig}
+  return 1
 end

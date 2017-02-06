@@ -159,16 +159,10 @@ Shoes.app(width: 800, height: 800, title: @title) do
   @arrayofImages = Array.new
 
   @standardGameButton.click do
-    @table = Table.new
-    @player1 = Player.new(1, 4, 1)
-    @player2 = Player.new(2, 4, 8)
     standardGame(@table, @player1, @player2)
   end
 
   @customGameButton.click do
-    @table = Table.new
-    @player1 = Player.new(1, 4, 1)
-    @player2 = Player.new(2, 4, 8)
     customGame(@table, @player1, @player2)
   end
 
