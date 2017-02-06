@@ -62,15 +62,12 @@ def move(table, attacker, defender, x, y, dx, dy, newFig = 0) # Table, Player, P
       end
     end
 
-    #if defender.table_of_range[attacker.king.x][attacker.king.y] == 'xx'
-    #  puts 'Dude, if you did this you\'d be in chess'
-    #  loadGame(@gameName, (@autosaveID - 2).to_s, table, defender, attacker) != 0
-    #  @autosaveID -= 1
-    #  table.display
-    #  return 1
-    #end
+    if defender.table_of_range[attacker.king.x][attacker.king.y] == 'xx'
+      puts 'Dude, if you did this you\'d be in chess'
+      return 2
+    end
 
-    # autosave(gameName, attacker, defender)
+    autosave(@gameName, attacker, defender, @autosaveID)
     return 0
   else
   return 1
@@ -176,6 +173,8 @@ def customGame (table, player1, player2)
 
   player1.generate_table_of_range(table)
   player2.generate_table_of_range(table)
+
+  table.format_table
 end
 
 def standardGame (table, player1, player2)
@@ -223,6 +222,8 @@ def standardGame (table, player1, player2)
 
   player1.generate_table_of_range(table)
   player2.generate_table_of_range(table)
+
+  table.format_table
 end
 
 def manualSave(saveDir, saveName, attacker, defender)

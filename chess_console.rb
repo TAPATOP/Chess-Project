@@ -45,24 +45,32 @@ def turn(gameName, table, attacker, defender)
         break
       end
       # validation of coordinates for 'move' above
-
-      if move(table, attacker, defender, x, y, dx, dy) == 1
-        puts 'You don\'t have a figure there, try again'
+      result = move(table, attacker, defender, x, y, dx, dy)
+      puts result
+      if result == 2
+        puts "I'M TRYING TO LOAD FILE №#{@autosaveID}"
+        loadGame(@gameName, (@autosaveID - 1).to_s, table, defender, attacker)
+        table.display
         next
       else
-        puts
-        attacker.table_of_range.display
-        puts
-        defender.table_of_range.display
-        puts
+        if result == 1
+          puts 'You don\'t have a figure there, try again'
+          next
+        else
+          puts
+          attacker.table_of_range.display
+          puts
+          defender.table_of_range.display
+          puts
 
-        table = Table.new()
+          table = Table.new()
 
-        table.put_figures(attacker.figures)
-        table.put_figures(defender.figures)
+          table.put_figures(attacker.figures)
+          table.put_figures(defender.figures)
 
-        table.display
-        @autosaveID = autosave(gameName, attacker, defender, @autosaveID)
+          table.display
+          @autosaveID = autosave(gameName, attacker, defender, @autosaveID)
+        end
       end
       break
     else
