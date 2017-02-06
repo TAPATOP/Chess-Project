@@ -155,8 +155,7 @@ while(true) do
     # gameName = 'custom game'
     puts 'plas say save(file) name for loading( do not include \'.txt\')'
     saveName = gets.chomp
-    saveName += '.txt'
-    currentPlayer = loadGame(gameName, saveName, table, player1, player2, currentPlayer)
+    currentPlayer = loadGame(gameName, saveName, table, player1, player2)
   else
     puts 'looks like you didnt input a correct type of a game'
     next

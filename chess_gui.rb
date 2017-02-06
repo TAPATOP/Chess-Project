@@ -2,13 +2,12 @@ require './FunctionFile.rb'
 
 def drawBoard
   @arrayofImages.each { |elem| if elem.left then elem.remove end}
-  @arrayofImages = Array.new
   @table.squares.each_index do |i|
-    @table.squares[i + 1].each_index do |j|
-      if LEGIT_FIGURES[@table[i + 1][j + 1].class] != nil
-        someFigure = image("#{@table[i + 1][j + 1].image}")
-        someFigure.left = @board[i][j].left
-        someFigure.top = @board[i][j].top
+    @table.squares[i].each_index do |j|
+      if LEGIT_FIGURES[@table[i][j].class] != nil
+        someFigure = image("#{@table[i][j].image}")
+        someFigure.left = @board[i -1 ][j - 1].left
+        someFigure.top = @board[i - 1][j - 1].top
         someFigure.height = @widthVal
         someFigure.width = @widthVal
         @arrayofImages.push(someFigure)
@@ -42,12 +41,13 @@ def colorBoard
   end
 end
 
-@title = "Itso's Almost Working Chess"
+@title = 'Itso\'s Almost Working Chess'
 
 Shoes.app(width: 800, height: 800, title: @title) do
   HASH_OF_COLORS = { 0 => white, 1 => black }
   HASH_OF_COLORS2 = { 0 => black, 1 => white }
   @board = Array.new(8) { Array.new(8) }
+  @arrayofImages = Array.new
 
   @table = Table.new
   @player1 = Player.new(1, 4, 1)
@@ -68,30 +68,60 @@ Shoes.app(width: 800, height: 800, title: @title) do
   stack do
     flow do
       @gameNameDefiningField = edit_line
-      @gameName = para "game name goes here"
+      @gameName = para 'game name goes here'
     end
     flow do
       @saveNameDefiningField = edit_line
-      @saveName = para "save name goes here"
+      @saveName = para 'save name goes here'
     end
 
-    @manualSaveButton = button "Save"
-    @manualSaveButton.click do
-      if @saveNameDefiningField.text != "" && @gameNameDefiningField != ""
-        @saveName.replace "SAVED!"
-        manualSave(@gameName.text, @saveNameDefiningField.text, @attacker, @defender)
-      else
-        @saveName.replace "Fields not properly filled"
-        popup = window(width: 200, height: 200) do
-        stack do
-          style(:margin_left => '50%', :left => '-25%', :align => "center")
-          para "please insert a game name"
-          ok = button "OK"
-          ok.click do
-            popup.close
+    flow do
+      @manualSaveButton = button 'Save'
+      @manualSaveButton.click do
+        if @saveNameDefiningField.text != "" && @gameNameDefiningField != ""
+          @saveName.replace 'SAVED!'
+          manualSave(@gameName.text, @saveNameDefiningField.text, @attacker, @defender)
+        else
+          @saveName.replace 'Fields not properly filled'
+          popup = window(width: 200, height: 200) do
+            stack do
+              style(:margin_left => '50%', :left => '-25%', :align => 'center')
+              para 'please insert a game name'
+              ok = button 'OK'
+              ok.click do
+                popup.close
+              end
+            end
           end
         end
       end
+      @loadButton = button 'Load'
+      @loadButton.click do
+        if @saveNameDefiningField.text != "" && @gameNameDefiningField != ""
+          @gameName.replace @gameNameDefiningField.text
+          @currentPlayer = loadGame(@gameName.text, @saveNameDefiningField.text, @table, @player1, @player2)
+          @saveName.replace 'LOADED!'
+          drawBoard
+        else
+          @saveName.replace 'Fields not properly filled'
+          popup = window(width: 200, height: 200) do
+            stack do
+              style(:margin_left => '50%', :left => '-25%', :align => 'center')
+              para 'please insert a game name'
+              ok = button 'OK'
+              ok.click do
+                popup.close
+              end
+            end
+          end
+        end
+      end
+      @undoButton = button 'Undo'
+      @undoButton.click do
+        @autosaveID -= 1
+        puts "reloading turn #{@autosaveID}"
+        @currentPlayer = loadGame(@gameName.text, @autosaveID.to_s, @table, @player1, @player2)
+        drawBoard
       end
     end
   end
@@ -164,7 +194,7 @@ Shoes.app(width: 800, height: 800, title: @title) do
     @currentPlayer = 0 # this should be relocated
 
     if @gameNameDefiningField.text != ""
-      @autosaveID = 0
+      @autosaveID = 1
       @gameName.replace @gameNameDefiningField.text
       drawBoard
     else

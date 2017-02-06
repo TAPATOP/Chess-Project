@@ -264,16 +264,29 @@ def autosave(gameName, attacker, defender, autosaveID)
   autosaveID += 1
 end
 
-def loadGame(gameName, saveName, table, player1, player2, currPlayer)
+def loadGame(gameName, saveName, table, player1, player2) # keep in mind this function returns the next player turn
   something = String.new
-  input = File.new("./Games/#{gameName}/#{saveName}")
+  input = File.new("./Games/#{gameName}/#{saveName}.txt")
   currPlayer = 0
+
+  player1.figures = Array.new
+  player1.add_figure(player1.king)
+
+  player2.figures = Array.new
+  player2.add_figure(player2.king)
+
+  table.squares.each_index do |i|
+    table.squares[i].each_index do |j|
+      table.squares[i] = Array.new(9,'--')
+    end
+  end
 
   while something = input.gets do
     if something.include?('Player')
       if something[7].to_i == 1
         readingPart(player1, input)
-      else readingPart(player2, input)
+      else
+        readingPart(player2, input)
       end
       currPlayer  = something[7].to_i if currPlayer  == 0
     end
