@@ -24,7 +24,6 @@ class Table
           end
         else print square
         end
-
         print ' '
       end
       puts

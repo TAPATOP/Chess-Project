@@ -266,38 +266,44 @@ end
 
 def loadGame(gameName, saveName, table, player1, player2) # keep in mind this function returns the next player turn
   something = String.new
-  input = File.new("./Games/#{gameName}/#{saveName}.txt")
-  currPlayer = 0
+  if File.exists?"./Games/#{gameName}/#{saveName}.txt"
+    input = File.new("./Games/#{gameName}/#{saveName}.txt")
+    currPlayer = 0
 
-  player1.figures = Array.new
-  player1.add_figure(player1.king)
+    player1.figures = Array.new
+    player1.add_figure(player1.king)
 
-  player2.figures = Array.new
-  player2.add_figure(player2.king)
+    player2.figures = Array.new
+    player2.add_figure(player2.king)
 
-  table.squares.each_index do |i|
-    table.squares[i].each_index do |j|
-      table.squares[i] = Array.new(9,'--')
-    end
-  end
-
-  while something = input.gets do
-    if something.include?('Player')
-      if something[7].to_i == 1
-        readingPart(player1, input)
-      else
-        readingPart(player2, input)
+    table.squares.each_index do |i|
+      table.squares[i].each_index do |j|
+        table.squares[i] = Array.new(9,'--')
       end
-      currPlayer  = something[7].to_i if currPlayer  == 0
     end
+
+    while something = input.gets do
+      if something.include?('Player')
+        if something[7].to_i == 1
+          readingPart(player1, input)
+        else
+          readingPart(player2, input)
+        end
+        currPlayer  = something[7].to_i if currPlayer  == 0
+      end
+    end
+    table.put_figures(player1.figures)
+    table.put_figures(player2.figures)
+    table.format_table
+
+    player1.generate_table_of_range(table)
+    player2.generate_table_of_range(table)
+
+    currPlayer
+  else
+    puts 'Sorry, can\'t load this'
+    0
   end
-  table.put_figures(player1.figures)
-  table.put_figures(player2.figures)
-
-  player1.generate_table_of_range(table)
-  player2.generate_table_of_range(table)
-
-  currPlayer
 end
 
 def readingPart(player, input)
@@ -316,7 +322,6 @@ def readingPart(player, input)
       end
     else
       if clas == 'end' || clas == 'next'
-        puts "enough is enough"
         break
       else
         if clas == 'enpas'

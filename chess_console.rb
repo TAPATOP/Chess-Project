@@ -11,7 +11,7 @@ include DiagonalMoves
 
 def turn(gameName, table, attacker, defender)
   while(true) do
-    puts "Player #{attacker.id} turn. Choose command: move, inspect, display, castle, save"
+    puts "Player #{attacker.id} turn. Choose command: move, inspect, display, castle, save, undo"
     command = gets.chomp
 
     if command == 'move'
@@ -116,7 +116,16 @@ def turn(gameName, table, attacker, defender)
               manualSave(gameName, saveName, attacker, defender)
               next
             else
-              puts 'Unrecognized command! Try again.'
+              if command == 'undo'
+                puts "loading #{@autosaveID - 2}"
+                if loadGame(gameName, (@autosaveID - 2).to_s, table, defender, attacker) != 0
+                  @autosaveID -= 1
+                  table.display
+                  break
+                end
+              else
+                puts 'Unrecognized command! Try again.'
+              end
             end
             next
           end
@@ -135,7 +144,7 @@ table.display
 puts
 puts 'helo dis is ebin chezz'
 while(true) do
-  @autosaveID = 0
+  @autosaveID = 1
   puts 'chus: Standard game(st), Custom game(cu) or Load game(load)'
   gameType = gets.chomp
   # gameType = 'load'
@@ -156,6 +165,7 @@ while(true) do
     puts 'plas say save(file) name for loading( do not include \'.txt\')'
     saveName = gets.chomp
     currentPlayer = loadGame(gameName, saveName, table, player1, player2)
+    next if currentPlayer == 0
   else
     puts 'looks like you didnt input a correct type of a game'
     next
