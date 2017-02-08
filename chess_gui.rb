@@ -220,6 +220,12 @@ Shoes.app(width: 800, height: 800, title: @title) do
   click do |button, left, top|
     i, j = getBoardSquareCoordsByCoords(left, top)
     @box.replace "#{i + 1}, #{j + 1}"
+    if LEGIT_FIGURES[@table[i+1][j+1].class] != nil
+      puts @table[i+1][j+1].x
+      puts @table[i+1][j+1].y
+      puts @table[i+1][j+1].has_moved
+      @table[i+1][j+1].table_of_range.display
+    end
     if firstPosLeft == 0
       firstPosLeft = i + 1
       firstPosTop = j + 1
@@ -282,7 +288,6 @@ Shoes.app(width: 800, height: 800, title: @title) do
       if result == -1
         popup = window do
           para "YOU'RE UNDER CHESS"
-          background.fill red
         end
       end
 

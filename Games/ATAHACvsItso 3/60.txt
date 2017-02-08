@@ -1,0 +1,19 @@
+Player 2 
+King 7 7 1 
+Pawn 7 1 0 
+Pawn 7 2 0 
+Pawn 7 3 0 
+Pawn 5 5 1 
+Rook 5 3 1 
+Knight 4 2 1 
+next 
+Player 1 
+King 1 4 0 
+Pawn 2 1 0 
+Pawn 2 2 0 
+Pawn 3 4 1 
+Pawn 5 8 1 
+Pawn 2 8 0 
+Rook 1 2 1 
+Knight 3 7 1 
+end 

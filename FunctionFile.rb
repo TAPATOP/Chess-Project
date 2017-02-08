@@ -62,15 +62,15 @@ def move(table, attacker, defender, x, y, dx, dy, newFig = 0) # Table, Player, P
       end
     end
 
-    if defender.table_of_range[attacker.king.x][attacker.king.y] == 'xx'
-      puts 'Dude, if you did this you\'d be in chess'
-      return 2
-    end
+   if defender.table_of_range[attacker.king.x][attacker.king.y] == 'xx'
+     puts 'Dude, if you did this you\'d be in chess'
+     return 2
+   end
 
-    autosave(@gameName, attacker, defender, @autosaveID)
-    return -1 if attacker.table_of_range[defender.king.x][defender.king.y] == 'xx'
+   #autosave(@gameName, attacker, defender, @autosaveID)
+   return -1 if attacker.table_of_range[defender.king.x][defender.king.y] == 'xx'
 
-    return 0
+   return 0
   else
   return 1
   end
@@ -132,7 +132,20 @@ def kingCastling(table, attacker, defender)
     attacker.king.table_of_range[kingX][2] = '++'
     move(table, attacker, defender, kingX, 4, kingX, 2)
   else
-    puts 'You can\'t castle king- side'
+    puts 'You can\'t castle king- side. Here, look at this shit:'
+
+    puts "#{table[kingX][1].class == Rook }"
+    puts "#{attacker.king.has_moved}"
+    puts "#{table[kingX][1].has_moved == 0 }"
+    puts "#{defender.table_of_range[kingX][4] == '--' }"
+    puts "#{defender.table_of_range[kingX][3] == '--' }"
+    puts "#{defender.table_of_range[kingX][2] == '--' }"
+    puts "#{table[kingX][3] == '--' }"
+    puts "#{table[kingX][2] == '--' }"
+    puts "#{(table[kingX + attacker.direction][1].class != Pawn || table[kingX + attacker.direction][1].direction == attacker.direction) }"
+    puts "#{(table[kingX + attacker.direction][4].class != Pawn || table[kingX + attacker.direction][4].direction == attacker.direction)}"
+
+
     return 1
   end
 end
@@ -333,7 +346,7 @@ def readingPart(player, input)
       if LEGIT_STRING_FIGURES[clas] == King
         player.king.x = x.to_i
         player.king.y = y.to_i
-        player.king.has_moved = has_moved
+        player.king.has_moved = has_moved.to_i
       else
         newFig = LEGIT_STRING_FIGURES[clas].new(x.to_i, y.to_i)
         newFig.has_moved = has_moved.to_i
