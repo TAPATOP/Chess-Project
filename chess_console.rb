@@ -74,7 +74,7 @@ def turn(gameName, table, attacker, defender)
 
           puts 'Watch out, you\'re under chess!' if result == -1
 
-          if canMoveWithoutEndingInCheck(table, defender, attacker) == 0
+          if canMoveWithoutEndingInCheck(gameName, table, defender, attacker) == 0
             puts 'GAME OVER!'
             if result == -1
               puts "PLAYER #{attacker.id} WINS!"

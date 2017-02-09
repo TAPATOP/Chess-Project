@@ -305,7 +305,7 @@ Shoes.app(width: 800, height: 800, title: @title) do
         end
       end
 
-      if canMoveWithoutEndingInCheck(@table, @defender, @attacker) == 0
+      if canMoveWithoutEndingInCheck(@gameName, @table, @defender, @attacker) == 0
         puts 'GAME OVER!'
         if result == -1
           @box.replace "PLAYER #{@attacker.id} WINS!"
@@ -316,6 +316,7 @@ Shoes.app(width: 800, height: 800, title: @title) do
           @box2.replace "DRAW!"
           @box3.replace "DRAW!"
         end
+        drawBoard
       end
 
       if result == 0 || result == -1

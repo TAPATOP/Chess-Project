@@ -71,7 +71,7 @@ def move(table, attacker, defender, x, y, dx, dy, newFig = 0) # Table, Player, P
 
     defender.generate_table_of_range(table)
 
-    table[dx][dy].set_moves(table)
+    table[dx][dy].set_moves(table) if LEGIT_FIGURES[table[dx][dy].class] != nil
 
     defender.table_of_range[holderX][holderY] = '!!' if holderX != 0 && holderX != nil
 
@@ -372,7 +372,7 @@ def isGameOver(table, attacker, defender)
   return 1
 end
 
-def canMoveWithoutEndingInCheck(table, attacker, defender)
+def canMoveWithoutEndingInCheck(gameName, table, attacker, defender)
   capture_stdout do
     attacker.figures.each do |fig|
       if LEGIT_FIGURES[fig.class] != nil
@@ -380,37 +380,14 @@ def canMoveWithoutEndingInCheck(table, attacker, defender)
           fig.table_of_range.squares[i].each_index do |j|
 
             if fig.table_of_range[i][j] != '--'
-              old_x = fig.x
-              old_y = fig.y
-              old_has_moved = fig.has_moved
-              old_en_passant = fig.en_passant if fig.class == Pawn
-              old_square = fig.table_of_range[i][j]
 
-              result = move(table, attacker, defender, old_x, old_y, i, j, -1)
+              manualSave(gameName, 'DO_NOT_DELETE_ME', attacker, defender)
 
-              fig.table_of_range[i][j] = old_square
+              result = move(table, attacker, defender, fig.x, fig.y, i, j, -1)
 
-              if fig.class == Pawn
-                fig.direction *= -1
-                fig.en_passant = old_en_passant
-                fig.set_moves(table)
-                fig.table_of_range[old_x][old_y] = old_square
-              end
+              resetGame(table, attacker, defender)
 
-              move(table, attacker, defender, i, j, old_x, old_y, -1)
-
-              if fig.class == Pawn
-                fig.direction *= -1
-                fig.en_passant = old_en_passant
-                fig.set_moves(table)
-              end
-
-              if fig.class == Pawn
-                fig.en_passant = old_en_passant
-              end
-
-              fig.has_moved = old_has_moved
-
+              loadGame(gameName, 'DO_NOT_DELETE_ME', table, attacker, defender)
 
               if result != 2 && result != 1
                 return 1
