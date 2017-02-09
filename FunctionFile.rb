@@ -264,9 +264,6 @@ def manualSave(saveDir, saveName, attacker, defender)
   dataToBeSaved += "end \n"
 
   File.open(final_destination, 'w') { |f| f.write(dataToBeSaved) }
-
-  #IO.write(final_destination, 'hi')
-  # File.open("out.txt", '<OPTION>') {|f| f.write("write your stuff here") }
 end
 
 def savingFunct(dataToBeSaved, player)
@@ -376,25 +373,52 @@ def isGameOver(table, attacker, defender)
 end
 
 def canMoveWithoutEndingInCheck(table, attacker, defender)
-  # capture_stdout do
+  capture_stdout do
     attacker.figures.each do |fig|
       if LEGIT_FIGURES[fig.class] != nil
         fig.table_of_range.squares.each_index do |i|
           fig.table_of_range.squares[i].each_index do |j|
 
+            old_defender_figures = defender.figures
+            puts "------------------------------"
             old_x = fig.x
             old_y = fig.y
             old_has_moved = fig.has_moved
             old_en_passant = fig.en_passant if fig.class == Pawn
             old_square = fig.table_of_range[i][j]
+
+            puts "I should return to #{old_x}, #{old_y}"
             result = move(table, attacker, defender, old_x, old_y, i, j, -1)
 
             fig.table_of_range[i][j] = old_square
 
+            if fig.class == Pawn
+              puts "fig dir before: #{fig.direction}"
+              fig.direction *= -1
+              fig.en_passant = old_en_passant
+              fig.set_moves(table)
+              fig.table_of_range[old_x][old_y] = old_square
+            end
+
+            puts "I am at #{fig.x}, #{fig.y} and i should move now"
+
             move(table, attacker, defender, i, j, old_x, old_y, -1)
 
+            if fig.class == Pawn
+              fig.direction *= -1
+              fig.en_passant = old_en_passant
+              fig.set_moves(table)
+              fig.table_of_range.display
+            end
+
+            puts "Now I am at #{fig.x}, #{fig.y}"
+
+            if fig.class == Pawn
+              fig.en_passant = old_en_passant
+            end
+
             fig.has_moved = old_has_moved
-            fig.en_passant = old_en_passant if fig.class == Pawn
+
 
             if result != 2 && result != 1
               puts "HI I FOUND A ROUTE"
@@ -407,5 +431,5 @@ def canMoveWithoutEndingInCheck(table, attacker, defender)
       end
     end
     return 0
-  # end
+  end
 end

@@ -41,7 +41,7 @@ def colorBoard
   end
 end
 
-@title = 'Itso\'s Almost Working Chess'
+@title = 'Itso\'s Almost Not Broken Chess'
 
 Shoes.app(width: 800, height: 800, title: @title) do
   HASH_OF_COLORS = { 0 => white, 1 => black }
@@ -127,9 +127,8 @@ Shoes.app(width: 800, height: 800, title: @title) do
   end
 
   flow do
-    @standardGameButton = button "Standard Game plz"
-    @customGameButton = button "Custom shet"
-    @drawGameButton = button "Draw me plox"
+    @standardGameButton = button "Standard Game"
+    @drawGameButton = button "Press this after first clicking 'Standard game' or 'Load' "
   end
 
   stack do
@@ -162,14 +161,40 @@ Shoes.app(width: 800, height: 800, title: @title) do
     standardGame(@table, @player1, @player2)
   end
 
-  @customGameButton.click do
-    customGame(@table, @player1, @player2)
-  end
-
   stack() do
     @box = para "i j"
     @box2 = para "i j"
     @box3 = para "i j"
+  end
+
+  replacementFigure = 'qu'
+
+  stack do
+    @rookB = button "Rook"
+    @rookB.click do
+      replacementFigure = 'ro'
+      @figureType.text = 'ro'
+    end
+
+    bishopB = button "Bishop"
+    bishopB.click do
+      replacementFigure = 'bi'
+      @figureType.replace 'bi'
+    end
+
+    queenB = button "Queen"
+    queenB.click do
+      replacementFigure = 'qu'
+      @figureType.replace 'qu'
+    end
+
+    knightB = button "Knight"
+    knightB.click do
+      replacementFigure = 'kn'
+      @figureType.replace 'kn'
+    end
+
+    @figureType = para replacementFigure
   end
 
   color = 0
@@ -262,7 +287,7 @@ Shoes.app(width: 800, height: 800, title: @title) do
       end
 
       result = 0
-      result = move(@table, @attacker, @defender, firstPosLeft, firstPosTop, secondPosLeft, secondPosTop, 'qu')
+      result = move(@table, @attacker, @defender, firstPosLeft, firstPosTop, secondPosLeft, secondPosTop, @figureType.text)
 
       if (firstPosLeft + firstPosTop) % 2 == 1
         @board[firstPosLeft - 1][firstPosTop - 1].fill = white
@@ -277,6 +302,19 @@ Shoes.app(width: 800, height: 800, title: @title) do
 
         popup = window(width: 200, height: 200) do
           para "If you do that your king will be in check"
+        end
+      end
+
+      if canMoveWithoutEndingInCheck(@table, @defender, @attacker) == 0
+        puts 'GAME OVER!'
+        if result == -1
+          @box.replace "PLAYER #{@attacker.id} WINS!"
+          @box2.replace "PLAYER #{@attacker.id} WINS!"
+          @box3.replace "PLAYER #{@attacker.id} WINS!"
+        else
+          @box.replace "DRAW!"
+          @box2.replace "DRAW!"
+          @box3.replace "DRAW!"
         end
       end
 
@@ -310,43 +348,3 @@ Shoes.app(width: 800, height: 800, title: @title) do
     end
   end
 end
-#@box.replace @board
-=begin
-  @whiteRook = image("./Images/WhiteRook.png")
-  @whiteRook.height = 40
-  @whiteRook.width = 40
-  @whiteKnight = image("./Images/WhiteKnight.png")
-  @whiteKnight.height = 40
-  @whiteKnight.width = 40
-  @whiteBishop = image("./Images/WhiteBishop.png")
-  @whiteBishop.height = 40
-  @whiteBishop.width = 40
-  @whiteQueen = image("./Images/WhiteQueen.png")
-  @whiteQueen.height = 40
-  @whiteQueen.width = 40
-  @whiteKing= image("./Images/WhiteKing.png")
-  @whiteKing.height = 40
-  @whiteKing.width = 40
-  @whitePawn = image("./Images/WhitePawn.png")
-  @whitePawn.height = 40
-  @whitePawn.width = 40
-
-  @blackRook = image("./Images/BlackRook.png")
-  @blackRook.height = 40
-  @blackRook.width = 40
-  @blackKnight = image("./Images/BlackKnight.png")
-  @blackKnight.height = 40
-  @blackKnight.width = 40
-  @blackBishop = image("./Images/BlackBishop.png")
-  @blackBishop.height = 40
-  @blackBishop.width = 40
-  @blackQueen = image("./Images/BlackQueen.png")
-  @blackQueen.height = 40
-  @blackQueen.width = 40
-  @blackKing= image("./Images/BlackKing.png")
-  @blackKing.height = 40
-  @blackKing.width = 40
-  @blackPawn = image("./Images/BlackPawn.png")
-  @blackPawn.height = 40
-  @blackPawn.width = 40
-=end

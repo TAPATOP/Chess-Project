@@ -1,8 +1,8 @@
-require './StraightMoves.rb' # it's a module
-require './DiagonalMoves.rb' # it's a module
-require './Figures.rb'
-require './Table.rb'
-require './Player.rb'
+#require './StraightMoves.rb' # it's a module
+#require './DiagonalMoves.rb' # it's a module
+#require './Figures.rb'
+#require './Table.rb'
+#require './Player.rb'
 require './FunctionFile.rb'
 require 'colorize'
 
@@ -144,12 +144,7 @@ def turn(gameName, table, attacker, defender)
                   break
                 end
               else
-                if command == 'check'
-                  canMoveWithoutEndingInCheck(table, attacker, defender)
-                  next
-                else
-                  puts 'Unrecognized command! Try again.'
-                end
+                puts 'Unrecognized command! Try again.'
               end
             end
             next
@@ -167,32 +162,28 @@ currentPlayer = 1
 
 table.display
 puts
-puts 'helo dis is ebin chezz'
+puts 'Hello to Itso\'s chess'
 while(true) do
   @autosaveID = 1
-  puts 'chus: Standard game(st), Custom game(cu) or Load game(load)'
+  puts 'Choose your gamemode: Standard game(st) or Load game(load)'
   gameType = gets.chomp
   # gameType = 'load'
 
   case gameType
   when 'st'
-    puts 'pls gib the game a name so u can undo'
+    puts 'please give the game a name, this affects the folder in which it gets saved'
     @gameName = gets.chomp
     standardGame(table, player1, player2)
-  when 'cu'
-    puts 'pls gib the game a name so u can undo'
-    @gameName = gets.chomp
-    customGame(table, player1, player2)
   when 'load'
-    puts 'pls say game(folder) name for loading'
+    puts 'please input the game(folder) name for loading'
     @gameName = gets.chomp
     # gameName = 'custom game'
-    puts 'plas say save(file) name for loading( do not include \'.txt\')'
+    puts 'please input save(file) name for loading( do not include \'.txt\')'
     saveName = gets.chomp
     currentPlayer = loadGame(@gameName, saveName, table, player1, player2)
     next if currentPlayer == 0
   else
-    puts 'looks like you didnt input a correct type of a game'
+    puts 'Looks like you didnt input a correct type of a game. Try "st" or "load"'
     next
   end
   while(true)
