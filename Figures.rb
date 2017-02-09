@@ -118,8 +118,7 @@ class King < Figure
 end
 
 class Pawn < Figure
-  attr_accessor :direction
-  @en_passant
+  attr_accessor :direction, :en_passant
 
   def set_moves(table)
     @table_of_range = Table.new

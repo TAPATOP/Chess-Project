@@ -11,7 +11,7 @@ include DiagonalMoves
 
 def turn(gameName, table, attacker, defender)
   while(true) do
-    puts "Player #{attacker.id} turn. Choose command: move, inspect, display, castle, save, undo"
+    puts "Player #{attacker.id} turn. Choose command: move, inspect, display, castle, save, undo, check"
     command = gets.chomp
 
     if command == 'move'
@@ -48,7 +48,7 @@ def turn(gameName, table, attacker, defender)
       result = move(table, attacker, defender, x, y, dx, dy)
       puts result
       if result == 2
-        puts "I'M TRYING TO LOAD FILE №#{@autosaveID}"
+        # puts "I'M TRYING TO LOAD FILE №#{@autosaveID}"
         loadGame(@gameName, (@autosaveID - 1).to_s, table, defender, attacker)
         table.display
         next
@@ -73,6 +73,15 @@ def turn(gameName, table, attacker, defender)
           @autosaveID = autosave(gameName, attacker, defender, @autosaveID)
 
           puts 'Watch out, you\'re under chess!' if result == -1
+
+          if canMoveWithoutEndingInCheck(table, defender, attacker) == 0
+            puts 'GAME OVER!'
+            if result == -1
+              puts "PLAYER #{attacker.id} WINS!"
+            else
+              puts "DRAW!"
+            end
+          end
         end
       end
       break
@@ -135,7 +144,12 @@ def turn(gameName, table, attacker, defender)
                   break
                 end
               else
-                puts 'Unrecognized command! Try again.'
+                if command == 'check'
+                  canMoveWithoutEndingInCheck(table, attacker, defender)
+                  next
+                else
+                  puts 'Unrecognized command! Try again.'
+                end
               end
             end
             next

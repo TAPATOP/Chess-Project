@@ -7,12 +7,29 @@ require './Player.rb'
 include StraightMoves
 include DiagonalMoves
 
-def move(table, attacker, defender, x, y, dx, dy, newFig = 0) # Table, Player, Player, FixNum, FixNum, FixNum, FixNum
+def capture_stdout(&block)
+  original_stdout = $stdout
+  $stdout = fake = StringIO.new
+  begin
+    yield
+  ensure
+    $stdout = original_stdout
+  end
+  fake.string
+end
+
+# for move
+# 0 = no error
+# 1 = error in #figure.move or no figure
+# 2 = self- influcted chess
+# -1 = check upon enemy
+def move(table, attacker, defender, x, y, dx, dy, newFig = 0) # Table, Player, Player, FixNum, FixNum, FixNum, FixNum, FixNum
   if LEGIT_FIGURES[table[x][y].class] && table[x][y].player == attacker.id
 
     if table[x][y].move(dx, dy, defender, table) == 1 then return 1 end
 
-    if table[dx][dy].class == Pawn && (table[dx][dy].x + table[dx][dy].direction > 8 || table[dx][dy].x + table[dx][dy].direction < 1)
+    if table[dx][dy].class == Pawn && newFig != -1 &&
+      (table[dx][dy].x + table[dx][dy].direction > 8 || table[dx][dy].x + table[dx][dy].direction < 1)
       puts 'Pawn has reached the end! What do you want to replace it with? The options are:'
       attacker.figures.delete(table[dx][dy])
       while(true)
@@ -20,7 +37,7 @@ def move(table, attacker, defender, x, y, dx, dy, newFig = 0) # Table, Player, P
 
         if newFig == 0 then newFig = gets.chomp end
 
-        if LEGIT_RESTORATION_FIGURES.key(newFig) != nil # I have serious questions about this entire shit
+        if LEGIT_RESTORATION_FIGURES.key(newFig) != nil
           nuFig = LEGIT_RESTORATION_FIGURES.key(newFig).new(dx, dy)
           attacker.add_figure(nuFig)
           table[dx][dy] = nuFig
@@ -38,14 +55,16 @@ def move(table, attacker, defender, x, y, dx, dy, newFig = 0) # Table, Player, P
 
     attacker.generate_table_of_range(table)
 
-    holderX, holderY = 0, 0
+    if newFig != -1
+      holderX, holderY = 0, 0
 
-    defender.table_of_range.squares.each_index do |i|
-      defender.table_of_range.squares[i].each_index do |j|
-        if defender.table_of_range[i][j] == '!'
-          holderX = i
-          holderY = j
-          break
+      defender.table_of_range.squares.each_index do |i|
+        defender.table_of_range.squares[i].each_index do |j|
+          if defender.table_of_range[i][j] == '!'
+            holderX = i
+            holderY = j
+            break
+          end
         end
       end
     end
@@ -54,7 +73,7 @@ def move(table, attacker, defender, x, y, dx, dy, newFig = 0) # Table, Player, P
 
     table[dx][dy].set_moves(table)
 
-    defender.table_of_range[holderX][holderY] = '!!' if holderX != 0
+    defender.table_of_range[holderX][holderY] = '!!' if holderX != 0 && holderX != nil
 
     defender.figures.each do |figure|
       if figure.class == Pawn && figure.x + figure.direction == holderX && ((figure.y - holderY).abs == 1)
@@ -67,9 +86,9 @@ def move(table, attacker, defender, x, y, dx, dy, newFig = 0) # Table, Player, P
      return 2
    end
 
-   #autosave(@gameName, attacker, defender, @autosaveID)
-   return -1 if attacker.table_of_range[defender.king.x][defender.king.y] == 'xx'
-
+   if attacker.table_of_range[defender.king.x][defender.king.y] == 'xx'
+      return -1
+   end
    return 0
   else
   return 1
@@ -132,20 +151,7 @@ def kingCastling(table, attacker, defender)
     attacker.king.table_of_range[kingX][2] = '++'
     move(table, attacker, defender, kingX, 4, kingX, 2)
   else
-    puts 'You can\'t castle king- side. Here, look at this shit:'
-
-    puts "#{table[kingX][1].class == Rook }"
-    puts "#{attacker.king.has_moved}"
-    puts "#{table[kingX][1].has_moved == 0 }"
-    puts "#{defender.table_of_range[kingX][4] == '--' }"
-    puts "#{defender.table_of_range[kingX][3] == '--' }"
-    puts "#{defender.table_of_range[kingX][2] == '--' }"
-    puts "#{table[kingX][3] == '--' }"
-    puts "#{table[kingX][2] == '--' }"
-    puts "#{(table[kingX + attacker.direction][1].class != Pawn || table[kingX + attacker.direction][1].direction == attacker.direction) }"
-    puts "#{(table[kingX + attacker.direction][4].class != Pawn || table[kingX + attacker.direction][4].direction == attacker.direction)}"
-
-
+    puts 'You can\'t castle king- side'
     return 1
   end
 end
@@ -365,6 +371,41 @@ def readingPart(player, input)
 end
 
 def isGameOver(table, attacker, defender)
-  defender.figures.each { |fig| return 0 if defender.king == fig}
+  defender.figures.each { |fig| return 0 if defender.king == fig }
   return 1
+end
+
+def canMoveWithoutEndingInCheck(table, attacker, defender)
+  # capture_stdout do
+    attacker.figures.each do |fig|
+      if LEGIT_FIGURES[fig.class] != nil
+        fig.table_of_range.squares.each_index do |i|
+          fig.table_of_range.squares[i].each_index do |j|
+
+            old_x = fig.x
+            old_y = fig.y
+            old_has_moved = fig.has_moved
+            old_en_passant = fig.en_passant if fig.class == Pawn
+            old_square = fig.table_of_range[i][j]
+            result = move(table, attacker, defender, old_x, old_y, i, j, -1)
+
+            fig.table_of_range[i][j] = old_square
+
+            move(table, attacker, defender, i, j, old_x, old_y, -1)
+
+            fig.has_moved = old_has_moved
+            fig.en_passant = old_en_passant if fig.class == Pawn
+
+            if result != 2 && result != 1
+              puts "HI I FOUND A ROUTE"
+              puts "You can move #{fig.class} to #{i}, #{j} because:"
+              fig.table_of_range.display
+              return 1
+            end
+          end
+        end
+      end
+    end
+    return 0
+  # end
 end
