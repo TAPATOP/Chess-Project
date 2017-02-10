@@ -1,9 +1,9 @@
 Player 1 
 King 1 4 0 
-Pawn 2 1 0 
+Pawn 4 1 1 
 Pawn 2 2 0 
 Pawn 2 3 0 
-Pawn 4 4 1 
+Pawn 2 4 0 
 Pawn 2 5 0 
 Pawn 2 6 0 
 Pawn 2 7 0 
@@ -28,7 +28,7 @@ Pawn 7 7 0
 Pawn 7 8 0 
 Rook 8 1 0 
 Rook 8 8 0 
-Knight 8 2 0 
+Knight 6 1 1 
 Knight 8 7 0 
 Bishop 8 3 0 
 Bishop 8 6 0 

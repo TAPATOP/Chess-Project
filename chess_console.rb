@@ -11,10 +11,11 @@ include DiagonalMoves
 
 def turn(gameName, table, attacker, defender)
   while(true) do
-    puts "Player #{attacker.id} turn. Choose command: move, inspect, display, castle, save, undo, check"
+    puts "Player #{attacker.id} turn. Choose command: move, inspect, display, castle, save, undo"
     command = gets.chomp
 
-    if command == 'move'
+    case command
+    when 'move'
       while(true) do
         puts 'X:'
         x = gets.chomp.to_i
@@ -43,8 +44,8 @@ def turn(gameName, table, attacker, defender)
           next
         end
         break
+        # validation of coordinates for 'move' above
       end
-      # validation of coordinates for 'move' above
       result = move(table, attacker, defender, x, y, dx, dy)
       puts result
       if result == 2
@@ -86,73 +87,61 @@ def turn(gameName, table, attacker, defender)
         end
       end
       break
-    else
-      if command == 'inspect'
-        puts 'X:'
-        x = gets.chomp.to_i
-        if x < 1 || x > 8
-          puts 'Invalid coordinates, try again'
-          next
-        end
+    when 'inspect'
+      puts 'X:'
+      x = gets.chomp.to_i
+      if x < 1 || x > 8
+        puts 'Invalid coordinates, try again'
+        next
+      end
 
-        puts 'Y:'
-        y = gets.chomp.to_i
-        if y < 1 || y > 8
-          puts 'Invalid coordinates, try again'
-          next
-        end
-        # coords validification
+      puts 'Y:'
+      y = gets.chomp.to_i
+      if y < 1 || y > 8
+        puts 'Invalid coordinates, try again'
+        next
+      end
+      # coords validification
 
        inspectFigure(table, attacker, x, y)
       next
-
-      else
-        if command == 'display'
-          displayTable(table)
-          next
+    when 'display'
+      displayTable(table)
+      next
+    when 'castle'
+      puts "Queenside castle or Kingside castle? 'qu' => Queenside, 'ki' => Kingside"
+      castleCommand = gets.chomp
+      if castleCommand == 'qu'
+        if queenCastling(table, attacker, defender) == 1 then next
         else
-          if command == 'castle'
-            puts "Queenside castle or Kingside castle? 'qu' => Queenside, 'ki' => Kingside"
-            castleCommand = gets.chomp
-            if castleCommand == 'qu'
-              if queenCastling(table, attacker, defender) == 1 then next
-              else
-                break
-              end
-            else
-              if castleCommand == 'ki'
-                if kingCastling(table, attacker, defender) == 1 then next
-                else
-                  break
-                end
-              else
-                puts 'Error, try again.'
-                next
-              end
-            end
+          break
+        end
+      else
+        if castleCommand == 'ki'
+          if kingCastling(table, attacker, defender) == 1 then next
           else
-            if command == 'save'
-              puts 'Input Game Name'
-              saveName = gets.chomp
-              manualSave(gameName, saveName, attacker, defender)
-              next
-            else
-              if command == 'undo'
-                puts "loading #{@autosaveID - 2}"
-                if loadGame(gameName, (@autosaveID - 2).to_s, table, defender, attacker) != 0
-                  @autosaveID -= 1
-                  table.display
-                  break
-                end
-              else
-                puts 'Unrecognized command! Try again.'
-              end
-            end
-            next
+            break
           end
+        else
+          puts 'Error, try again.'
+          next
         end
       end
-    end
+    when 'save'
+      puts 'Input Game Name'
+      saveName = gets.chomp
+      manualSave(gameName, saveName, attacker, defender)
+      next
+    when 'undo'
+      puts "loading #{@autosaveID - 2}"
+       if loadGame(gameName, (@autosaveID - 2).to_s, table, defender, attacker) != 0
+         @autosaveID -= 1
+         table.display
+         break
+       end
+     else
+       puts 'Unrecognized command! Try again.'
+     end
   end
 end
 
