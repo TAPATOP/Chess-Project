@@ -331,6 +331,8 @@ def loadGame(gameName, saveName, table, player1, player2) # keep in mind this fu
     table.put_figures(player2.figures)
     table.format_table
 
+    puts "time to debug"
+
     player1.generate_table_of_range(table)
     player2.generate_table_of_range(table)
 
@@ -381,11 +383,35 @@ def canMoveWithoutEndingInCheck(gameName, table, attacker, defender)
 
             if fig.table_of_range[i][j] != '--'
 
-              manualSave(gameName, 'DO_NOT_DELETE_ME', attacker, defender)
+              manualSave(gameName, 'DO_NOT_TOUCH_ME', attacker, defender)
 
               result = move(table, attacker, defender, fig.x, fig.y, i, j, -1)
 
-              resetGame(table, attacker, defender)
+              loadGame(gameName, 'DO_NOT_TOUCH_ME', table, attacker, defender)
+
+              if result != 2 && result != 1
+                return 1
+              end
+            end
+          end
+        end
+      end
+    end
+    return 0
+  end
+end
+def canMoveWithoutEndingInCheck_gui(gameName, table, attacker, defender)
+  capture_stdout do
+    attacker.figures.each do |fig|
+      if LEGIT_FIGURES[fig.class] != nil
+        fig.table_of_range.squares.each_index do |i|
+          fig.table_of_range.squares[i].each_index do |j|
+
+            if fig.table_of_range[i][j] != '--'
+
+              manualSave(gameName, 'DO_NOT_DELETE_ME', attacker, defender)
+
+              result = move(table, attacker, defender, fig.x, fig.y, i, j, -1)
 
               loadGame(gameName, 'DO_NOT_DELETE_ME', table, attacker, defender)
 

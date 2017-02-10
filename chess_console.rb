@@ -63,18 +63,12 @@ def turn(gameName, table, attacker, defender)
           defender.table_of_range.display
           puts
 
-          table = Table.new()
-
-          table.put_figures(attacker.figures)
-          table.put_figures(defender.figures)
-
-          table.display
           puts
           @autosaveID = autosave(gameName, attacker, defender, @autosaveID)
 
           puts 'Watch out, you\'re under chess!' if result == -1
 
-          if canMoveWithoutEndingInCheck(gameName, table, defender, attacker) == 0
+          if canMoveWithoutEndingInCheck(@gameName, table, defender, attacker) == 0
             puts 'GAME OVER!'
             if result == -1
               puts "PLAYER #{attacker.id} WINS!"
@@ -82,6 +76,13 @@ def turn(gameName, table, attacker, defender)
               puts "DRAW!"
             end
           end
+
+          table = Table.new()
+
+          table.put_figures(attacker.figures)
+          table.put_figures(defender.figures)
+
+          table.display
         end
       end
       break
