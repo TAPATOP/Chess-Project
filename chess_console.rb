@@ -11,7 +11,7 @@ include DiagonalMoves
 
 def turn(gameName, table, attacker, defender)
   while(true) do
-    puts "Player #{attacker.id} turn. Choose command: move, inspect, display, castle, save, undo"
+    puts "Player #{attacker.id} turn. Choose command: move, inspect, display, castle, save, undo, surrender"
     command = gets.chomp
 
     case command
@@ -70,11 +70,12 @@ def turn(gameName, table, attacker, defender)
           puts 'Watch out, you\'re under chess!' if result == -1
 
           if canMoveWithoutEndingInCheck(@gameName, table, defender, attacker) == 0
-            puts 'GAME OVER!'
+
             if result == -1
-              puts "PLAYER #{attacker.id} WINS!"
+              puts 'CHECKMATE'
+              return 1
             else
-              puts "DRAW!"
+              return 0
             end
           end
 
@@ -139,9 +140,11 @@ def turn(gameName, table, attacker, defender)
          table.display
          break
        end
-     else
+    when 'surrender'
+      return 2
+    else
        puts 'Unrecognized command! Try again.'
-     end
+    end
   end
 end
 
@@ -155,7 +158,7 @@ puts
 puts 'Hello to Itso\'s chess'
 while(true) do
   @autosaveID = 1
-  puts 'Choose your gamemode: Standard game(st) or Load game(load)'
+  puts 'Choose your gamemode: Standard game(st) or Load game(load). You can exit by "exit".'
   gameType = gets.chomp
   # gameType = 'load'
 
@@ -172,6 +175,9 @@ while(true) do
     saveName = gets.chomp
     currentPlayer = loadGame(@gameName, saveName, table, player1, player2)
     next if currentPlayer == 0
+  when 'exit'
+    puts 'Bye! I already miss you :\'{'
+    break
   else
     puts 'Looks like you didnt input a correct type of a game. Try "st" or "load"'
     next
@@ -183,13 +189,37 @@ while(true) do
     if currentPlayer == 2
       currentPlayer = 1
     else
-      turn(@gameName, table, player1, player2)
+      result = turn(@gameName, table, player1, player2)
+      case result
+      when 0
+        puts "DRAW!"
+        break
+      when 1
+        puts "PLAYER 1 WINS"
+        break
+      when 2
+        puts "PLAYER 1 SURRENDERS! PLAYER 2 WINS!"
+        break
+      end
+
       if isGameOver(table, player1, player2) == 1
         puts "Player 1 Wins!"
         break
       end
     end
-    turn(@gameName, table, player2, player1)
+
+    result = turn(@gameName, table, player2, player1)
+      case result
+      when 0
+        puts "DRAW!"
+        break
+      when 1
+        puts "PLAYER 2 WINS"
+        break
+      when 2
+        puts "PLAYER 2 SURRENDERS! PLAYER 1 WINS!"
+        break
+      end
     if isGameOver(table, player2, player1) == 1
         puts "Player 2 Wins!"
         break

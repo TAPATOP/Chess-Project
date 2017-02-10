@@ -1,8 +1,8 @@
 Player 1 
 King 1 4 0 
-Pawn 3 1 1 
+Pawn 2 1 0 
 Pawn 2 2 0 
-Pawn 2 3 0 
+Pawn 4 3 1 
 Pawn 2 4 0 
 Pawn 2 5 0 
 Pawn 2 6 0 
@@ -33,4 +33,5 @@ Knight 8 7 0
 Bishop 8 3 0 
 Bishop 8 6 0 
 Queen 8 5 0 
+enpas 3 3 
 end 
