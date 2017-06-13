@@ -1,0 +1,12 @@
+Player 1 
+King 2 4 1 
+Pawn 2 1 0 
+Pawn 4 2 1 
+Rook 5 1 1 
+next 
+Player 2 
+King 6 7 1 
+Pawn 2 5 1 
+Rook 2 8 1 
+Knight 6 6 1 
+end 

@@ -1,0 +1,23 @@
+Player 1 
+King 1 4 0 
+Pawn 2 1 0 
+Pawn 2 2 0 
+Pawn 2 3 0 
+Pawn 3 4 1 
+Pawn 3 8 1 
+Pawn 2 8 0 
+Rook 1 1 0 
+Knight 3 7 1 
+Bishop 6 6 1 
+Queen 4 8 1 
+next 
+Player 2 
+King 7 5 1 
+Pawn 7 1 0 
+Pawn 7 2 0 
+Pawn 7 3 0 
+Pawn 5 5 1 
+Rook 5 3 1 
+Knight 4 4 1 
+Queen 8 6 1 
+end 
